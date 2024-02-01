@@ -32,22 +32,22 @@ const routes = [
   {
     path: '/app/leads', // url
     icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
-    name: 'Leads', // name that appear in Sidebar
+    name: 'List Schedule', // name that appear in Sidebar
   },
   {
     path: '/app/transactions', // url
     icon: <CurrencyDollarIcon className={iconClasses}/>, // icon component
-    name: 'Transactions', // name that appear in Sidebar
+    name: 'Generate Schedule', // name that appear in Sidebar
   },
   {
     path: '/app/charts', // url
     icon: <ChartBarIcon className={iconClasses}/>, // icon component
-    name: 'Analytics', // name that appear in Sidebar
+    name: 'University Class And Department', // name that appear in Sidebar
   },
   {
     path: '/app/integration', // url
     icon: <BoltIcon className={iconClasses}/>, // icon component
-    name: 'Integration', // name that appear in Sidebar
+    name: 'Professor Schedule', // name that appear in Sidebar
   },
   {
     path: '/app/calendar', // url

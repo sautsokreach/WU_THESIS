@@ -9,7 +9,9 @@ function LandingIntro(){
             <div className="hero-content py-12">
               <div className="max-w-md">
 
-              <h1 className=''><img src="/logo192.png" className="w-12 inline-block mr-2 mask mask-circle" alt="dashwind-logo" />Western University Schedule Generate</h1>
+              <h1 className='' style={{ fontWeight: 'bold', fontSize: '3rem' }}>Western University Schedule Generate</h1>
+
+
 
                 <div className="text-center mt-12"><img src="./unnamed.png" alt="Dashwind Admin Template" className="w-48 inline-block"></img></div>
               

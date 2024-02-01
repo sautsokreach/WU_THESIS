@@ -45,7 +45,7 @@ function Register(){
                         <LandingIntro />
                 </div>
                 <div className='py-24 px-10'>
-                    <h2 className='text-2xl font-semibold mb-2 text-center'>Register</h2>
+                    <h2 className='text-4xl font-semibold mb-2 text-center text-blue-500'>Register</h2>
                     <form onSubmit={(e) => submitForm(e)}>
 
                         <div className="mb-4">
@@ -61,7 +61,7 @@ function Register(){
                         <ErrorText styleClass="mt-8">{errorMessage}</ErrorText>
                         <button type="submit" className={"btn mt-2 w-full btn-primary" + (loading ? " loading" : "")}>Register</button>
 
-                        <div className='text-center mt-4'>Already have an account? <Link to="/login"><span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Login</span></Link></div>
+                        <div className='text-center mt-4'>Already have an account? <Link to="/login"><span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200 text-blue-500">Login</span></Link></div>
                     </form>
                 </div>
             </div>
