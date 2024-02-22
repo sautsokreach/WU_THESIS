@@ -18,8 +18,8 @@ const TopSideButtons = () => {
 
     return(
         <div className="inline-block float-right">
-            <button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewLeadModal()}>Add New</button>
-        </div>
+  <button className="btn px-6 btn-sm normal-case btn-primary text-white" onClick={() => openAddNewLeadModal()}>Add New</button>
+</div>
     )
 }
 
