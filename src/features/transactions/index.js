@@ -10,19 +10,27 @@ import SearchBar from "../../components/Input/SearchBar";
 import DateRangePicker from "flowbite-datepicker/DateRangePicker";
 
 const GenerateButtons = () => {
-    //{ removeFilter, applyFilter, applySearch }
-    const addNewTeamMember = () => {
-        //dispatch(showNotification({message : "Add New Member clicked", status : 1}))
-    }
-    return(
-        <div className="inline-block float-right">
-            <button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => addNewTeamMember()}>Generate Schedule</button>
-        </div>
-    )
+  const dispatch = useDispatch()
+
+  const addNewTeamMember = () => {
+     // dispatch(showNotification({message : "Add New Member clicked", status : 1}))
+  }
+  return(
+      <div className="inline-block float-right">
+          <button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => addNewTeamMember()}>Generate Schedule</button>
+      </div>
+  )
 };
 
-
 function Transactions() {
+
+  useEffect(()=>{
+    const dateRangePickerEl = document.getElementById('dateRangePickerId');
+    new DateRangePicker(dateRangePickerEl, {
+        // options
+    }); 
+  })
+
   const [trans, setTrans] = useState(RECENT_TRANSACTIONS);
 
   const removeFilter = () => {
@@ -200,11 +208,10 @@ function Transactions() {
               <option>Star Trek</option>
             </select>
           </label>
-            <div className="form-control w-full  col-span-3 flex items-center">
-            {GenerateButtons()}
-            </div >
         </div>
-       
+        <div className="form-control w-full  col-span-3 items-center my-10">
+            {GenerateButtons()}
+        </div >
       </TitleCard>
     </>
   );
