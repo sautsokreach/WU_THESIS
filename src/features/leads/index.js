@@ -231,7 +231,7 @@ export default function FullFeaturedCrudGrid() {
     ];
 
     return (
-        <TitleCard title="Current Leads" topMargin="mt-2" >
+        <TitleCard title="List Schedule" topMargin="mt-2" >
             <Box
                 sx={{
                     height: 500,

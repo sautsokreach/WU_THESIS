@@ -30,11 +30,45 @@ const randomRole = () => {
 const initialRows = [
     {
         id: randomId(),
-        first_name: "chhun",
-        last_name: "Vuth Chanraksmey",
-        department: "English for Communication",
-        phoneNumber: "0122234123"
+        department_name: "Hotel & Tourism",
     },
+    {
+        id: randomId(),
+        department_name: "Teaching English",
+    },
+    {
+        id: randomId(),
+        department_name: "English for Communication",
+    },
+    {
+        id: randomId(),
+        department_name: "Computer Science",
+    },
+    {
+        id: randomId(),
+        department_name: "Management",
+    },
+    {
+        id: randomId(),
+        department_name: "Marketing",
+    },
+    {
+        id: randomId(),
+        department_name: "Accounting",
+    },
+    {
+        id: randomId(),
+        department_name: "Banking and Finance ",
+    },
+    {
+        id: randomId(),
+        department_name: "Law",
+    },
+    {
+        id: randomId(),
+        department_name: "Engineering",
+    },
+    
 ];
 
 
@@ -60,7 +94,7 @@ function EditToolbar(props) {
     );
 }
 
-export default function Calendar() {
+export default function FullFeaturedCrudGrid() {
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState({});
 
@@ -105,17 +139,7 @@ export default function Calendar() {
     };
 
     const columns = [
-        { field: 'first_name', headerName: 'First Name', width: 180, editable: true },
-        { field: 'last_name', headerName: 'Last Name', width: 180, editable: true },
-        {
-            field: 'department',
-            headerName: 'Department',
-            width: 220,
-            editable: true,
-            type: 'singleSelect',
-            valueOptions: ['Hotel & Tourism', 'Teaching English', 'English for Communication','Computer Science', 'Management', 'Marketing','Accounting', 'Banking and Finance ', 'Law','Engineering'],
-        },
-        { field: 'phoneNumber', headerName: 'Phone Number', width: 180, editable: true },
+        { field: 'department_name', headerName: 'Department Name', width: 180, editable: true },
         {
             field: 'actions',
             type: 'actions',
@@ -165,7 +189,7 @@ export default function Calendar() {
     ];
 
     return (
-        <TitleCard title="Professor" topMargin="mt-2" >
+        <TitleCard title="Department" topMargin="mt-2" >
             <Box
                 sx={{
                     height: 500,

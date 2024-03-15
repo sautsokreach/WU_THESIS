@@ -30,10 +30,38 @@ const randomRole = () => {
 const initialRows = [
     {
         id: randomId(),
-        first_name: "chhun",
-        last_name: "Vuth Chanraksmey",
-        department: "English for Communication",
-        phoneNumber: "0122234123"
+        name: randomTraderName(),
+        age: 25,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 36,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 19,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 28,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 23,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
     },
 ];
 
@@ -60,7 +88,7 @@ function EditToolbar(props) {
     );
 }
 
-export default function Calendar() {
+export default function FullFeaturedCrudGrid() {
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState({});
 
@@ -105,17 +133,33 @@ export default function Calendar() {
     };
 
     const columns = [
-        { field: 'first_name', headerName: 'First Name', width: 180, editable: true },
-        { field: 'last_name', headerName: 'Last Name', width: 180, editable: true },
+        { field: 'name_en', headerName: 'English Name', width: 200, editable: true },
         {
-            field: 'department',
-            headerName: 'Department',
-            width: 220,
+            field: 'name_kh',
+            headerName: 'Khmer Name',
+            width: 300,
+            align: 'left',
+            headerAlign: 'left',
             editable: true,
-            type: 'singleSelect',
-            valueOptions: ['Hotel & Tourism', 'Teaching English', 'English for Communication','Computer Science', 'Management', 'Marketing','Accounting', 'Banking and Finance ', 'Law','Engineering'],
         },
-        { field: 'phoneNumber', headerName: 'Phone Number', width: 180, editable: true },
+        {
+            field: 'location',
+            headerName: 'Location',
+            width: 300,
+            editable: true,
+        },
+        {
+            field: 'website',
+            headerName: 'Website',
+            width: 200,
+            editable: true,
+        },
+        {
+            field: 'logo',
+            headerName: 'Logo',
+            width: 200,
+            editable: true,
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -165,7 +209,7 @@ export default function Calendar() {
     ];
 
     return (
-        <TitleCard title="Professor" topMargin="mt-2" >
+        <TitleCard title="University" topMargin="mt-2" >
             <Box
                 sx={{
                     height: 500,

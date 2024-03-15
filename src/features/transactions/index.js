@@ -23,6 +23,8 @@ const GenerateButtons = () => {
 };
 
 function Transactions() {
+  const currentYear = new Date().getFullYear();
+  const years = Array.from(new Array(21), (val, index) => currentYear - 10 + index);
 
   useEffect(()=>{
     const dateRangePickerEl = document.getElementById('dateRangePickerId');
@@ -58,7 +60,7 @@ function Transactions() {
   return (
     <>
       <TitleCard
-        title="Recent Transactions"
+        title="Generate Schedule"
         topMargin="mt-2"
       >
         <div className="grid grid-cols-3 gap-y-5">
@@ -78,14 +80,11 @@ function Transactions() {
               <span className="label-text">Year</span>
             </div>
             <select className="select select-bordered">
-              <option disabled defaultValue>
-                Pick one
-              </option>
-              <option>Star Wars</option>
-              <option>Harry Potter</option>
-              <option>Lord of the Rings</option>
-              <option>Planet of the Apes</option>
-              <option>Star Trek</option>
+                {years.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
             </select>
           </label>
 
@@ -95,13 +94,10 @@ function Transactions() {
             </div>
             <select className="select select-bordered">
               <option disabled defaultValue>
-                Pick one
+                Toul Kork
               </option>
-              <option>Star Wars</option>
-              <option>Harry Potter</option>
-              <option>Lord of the Rings</option>
-              <option>Planet of the Apes</option>
-              <option>Star Trek</option>
+              <option>Toul Svay Prey</option>
+              <option>KomPong Cham</option>
             </select>
           </label>
 
@@ -121,14 +117,10 @@ function Transactions() {
               <span className="label-text">Semester</span>
             </div>
             <select className="select select-bordered">
-              <option disabled defaultValue>
-                Pick one
+              <option>
+                1
               </option>
-              <option>Star Wars</option>
-              <option>Harry Potter</option>
-              <option>Lord of the Rings</option>
-              <option>Planet of the Apes</option>
-              <option>Star Trek</option>
+              <option>2</option>
             </select>
           </label>
 
@@ -140,11 +132,16 @@ function Transactions() {
               <option disabled defaultValue>
                 Pick one
               </option>
-              <option>Star Wars</option>
-              <option>Harry Potter</option>
-              <option>Lord of the Rings</option>
-              <option>Planet of the Apes</option>
-              <option>Star Trek</option>
+              <option>Hotel & Tourism</option>
+              <option>Teaching English</option>
+              <option>English for Communication</option>
+              <option>Computer Science</option>
+              <option>Management</option>
+              <option>Marketing</option>
+              <option>Accounting</option>
+              <option>Banking and Finance </option>
+              <option>Law</option>
+              <option>Engineering</option>
             </select>
           </label>
           <label className="form-control w-full  col-span-2">
@@ -195,17 +192,16 @@ function Transactions() {
           </label>
           <label className="form-control w-full max-w-xs col-span-1">
             <div className="label">
-              <span className="label-text">Department</span>
+              <span className="label-text">Shift</span>
             </div>
             <select className="select select-bordered">
               <option disabled defaultValue>
                 Pick one
               </option>
-              <option>Star Wars</option>
-              <option>Harry Potter</option>
-              <option>Lord of the Rings</option>
-              <option>Planet of the Apes</option>
-              <option>Star Trek</option>
+              <option>Morning</option>
+              <option>AfterNoon</option>
+              <option>Evening</option>
+              <option>Weekend</option>
             </select>
           </label>
         </div>

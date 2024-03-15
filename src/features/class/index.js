@@ -30,11 +30,23 @@ const randomRole = () => {
 const initialRows = [
     {
         id: randomId(),
-        first_name: "chhun",
-        last_name: "Vuth Chanraksmey",
-        department: "English for Communication",
-        phoneNumber: "0122234123"
+        room_number: 100,
+        status: 'Available',
+        comment: '',
     },
+    {
+        id: randomId(),
+        room_number: 101,
+        status: 'Available',
+        comment: '',
+    },
+    {
+        id: randomId(),
+        room_number: 102,
+        status: 'Available',
+        comment: '',
+    },
+    
 ];
 
 
@@ -60,7 +72,7 @@ function EditToolbar(props) {
     );
 }
 
-export default function Calendar() {
+export default function FullFeaturedCrudGrid() {
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState({});
 
@@ -105,17 +117,22 @@ export default function Calendar() {
     };
 
     const columns = [
-        { field: 'first_name', headerName: 'First Name', width: 180, editable: true },
-        { field: 'last_name', headerName: 'Last Name', width: 180, editable: true },
+        { field: 'room_number', headerName: 'Room Number', width: 180, editable: true },
         {
-            field: 'department',
-            headerName: 'Department',
-            width: 220,
-            editable: true,
+            field: 'status',
+            headerName: 'Status',
+            width: 200,
+            align: 'left',
+            headerAlign: 'left',
             type: 'singleSelect',
-            valueOptions: ['Hotel & Tourism', 'Teaching English', 'English for Communication','Computer Science', 'Management', 'Marketing','Accounting', 'Banking and Finance ', 'Law','Engineering'],
+            valueOptions: ['Available', 'InAvailable'],
         },
-        { field: 'phoneNumber', headerName: 'Phone Number', width: 180, editable: true },
+        {
+            field: 'comment',
+            headerName: 'Comment',
+            width: 180,
+            editable: true,
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -165,7 +182,7 @@ export default function Calendar() {
     ];
 
     return (
-        <TitleCard title="Professor" topMargin="mt-2" >
+        <TitleCard title="Room" topMargin="mt-2" >
             <Box
                 sx={{
                     height: 500,

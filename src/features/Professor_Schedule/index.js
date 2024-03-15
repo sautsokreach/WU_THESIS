@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useDispatch } from "react-redux";
@@ -9,14 +10,85 @@ import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 import SearchBar from "../../components/Input/SearchBar";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import Box from "@mui/material/Box";
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
+import {
+  GridRowModes,
+  DataGrid,
+  GridToolbarContainer,
+  GridActionsCellItem,
+  GridRowEditStopReasons,
+} from '@mui/x-data-grid';
+import {
+    randomCreatedDate,
+    randomTraderName,
+    randomId,
+    randomArrayItem,
+} from '@mui/x-data-grid-generator';
 
-const periodOptions = [
-  { name: "Today", value: "TODAY" },
-  { name: "Yesterday", value: "YESTERDAY" },
-  { name: "This Week", value: "THIS_WEEK" },
-  { name: "Last Week", value: "LAST_WEEK" },
-  { name: "This Month", value: "THIS_MONTH" },
-  { name: "Last Month", value: "LAST_MONTH" },
+const roles = ['Market', 'Finance', 'Development'];
+const randomRole = () => {
+    return randomArrayItem(roles);
+};
+
+const initialRows = [
+    {
+        id: randomId(),
+        time: '08:00 - 11:00',
+        age: 25,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        time: '14:00 - 17:00',
+        age: 36,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        time: '17:30 - 20:00',
+        age: 19,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    
+];
+
+
+function EditToolbar(props) {
+    const { setRows, setRowModesModel } = props;
+
+    const handleClick = () => {
+        const id = randomId();
+        setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
+        setRowModesModel((oldModel) => ({
+            ...oldModel,
+            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+        }));
+    };
+
+    return (
+
+        <GridToolbarContainer>
+            {/* <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}> */}
+            <Button color="primary" startIcon={<AddIcon />} >
+                Submit
+            </Button>
+        </GridToolbarContainer>
+    );
+}
+
+const listTeacher = [
+  { name: "Chhun Vuth Chanraksmey", value: "1" },
+];
+const listSubject = [
+  { name: "English for Communication I", value: "1" }
 ];
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
@@ -110,11 +182,170 @@ function Professor_Schedule() {
     setTrans(filteredTransactions);
   };
 
-  return (
+  const [rows, setRows] = React.useState(initialRows);
+  const [rowModesModel, setRowModesModel] = React.useState({});
+
+  const handleRowEditStop = (params, event) => {
+      if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+          event.defaultMuiPrevented = true;
+      }
+  };
+
+  const handleEditClick = (id) => () => {
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+  };
+
+  const handleSaveClick = (id) => () => {
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+  };
+
+  const handleDeleteClick = (id) => () => {
+      setRows(rows.filter((row) => row.id !== id));
+  };
+
+  const handleCancelClick = (id) => () => {
+      setRowModesModel({
+          ...rowModesModel,
+          [id]: { mode: GridRowModes.View, ignoreModifications: true },
+      });
+
+      const editedRow = rows.find((row) => row.id === id);
+      if (editedRow.isNew) {
+          setRows(rows.filter((row) => row.id !== id));
+      }
+  };
+
+  const processRowUpdate = (newRow) => {
+      const updatedRow = { ...newRow, isNew: false };
+      setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+      return updatedRow;
+  };
+
+  const handleRowModesModelChange = (newRowModesModel) => {
+      setRowModesModel(newRowModesModel);
+  };
+
+  const columns = [
+      {
+          field: 'time',
+          headerName: 'Time',
+          width: 150,
+          align: 'left',
+          headerAlign: 'left',
+          type: 'singleSelect',
+          valueOptions: ['08:00 - 11:00', '14:00 - 17:00', '17:30 - 20:30'],
+      },
+      {
+          field: 'monday',
+          headerName: 'Monday',
+          width: 100,
+          editable: true,
+          type: 'boolean',
+      },
+      {
+        field: 'tuesday',
+        headerName: 'Tuesday',
+        width: 100,
+        editable: true,
+        type: 'boolean',
+      },
+      {
+        field: 'wednesday',
+        headerName: 'Wednesday',
+        width: 100,
+        editable: true,
+        type: 'boolean',
+      },
+      {
+        field: 'thursday',
+        headerName: 'Thursday',
+        width: 100,
+        editable: true,
+        type: 'boolean',
+      },
+      {
+        field: 'friday',
+        headerName: 'Friday',
+        width: 100,
+        editable: true,
+        type: 'boolean',
+      },
+      {
+        field: 'saturday',
+        headerName: 'Saturday',
+        width: 100,
+        editable: true,
+        type: 'boolean',
+      },
+      {
+        field: 'sunday',
+        headerName: 'Sunday',
+        width: 100,
+        editable: true,
+        type: 'boolean',
+      },
+
+      {
+          field: 'actions',
+          type: 'actions',
+          headerName: 'Actions',
+          width: 100,
+          cellClassName: 'actions',
+          getActions: ({ id }) => {
+              const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+              if (isInEditMode) {
+                  return [
+                      <GridActionsCellItem
+                          icon={<SaveIcon />}
+                          label="Save"
+                          sx={{
+                              color: 'primary.main',
+                          }}
+                          onClick={handleSaveClick(id)}
+                      />,
+                      <GridActionsCellItem
+                          icon={<CancelIcon />}
+                          label="Cancel"
+                          className="textPrimary"
+                          onClick={handleCancelClick(id)}
+                          color="inherit"
+                      />,
+                  ];
+              }
+
+              return [
+                  <GridActionsCellItem
+                      icon={<EditIcon />}
+                      label="Edit"
+                      className="textPrimary"
+                      onClick={handleEditClick(id)}
+                      color="inherit"
+                  />,
+                  <GridActionsCellItem
+                      icon={<DeleteIcon />}
+                      label="Delete"
+                      onClick={handleDeleteClick(id)}
+                      color="inherit"
+                  />,
+              ];
+          },
+      },
+  ];
+
+  return ( 
     <>
-      <div className="grid grid-cols-5 sm:grid-cols-5 ">
+      <div className="grid grid-cols-3 sm:grid-cols-3 ">
         <SelectBox
-          options={periodOptions}
+          options={listTeacher}
+          labelTitle="Period"
+          placeholder="Select date range"
+          containerStyle="w-72"
+          labelStyle="hidden"
+          defaultValue="TODAY"
+        />
+        <SelectBox
+          options={listSubject}
           labelTitle="Period"
           placeholder="Select date range"
           containerStyle="w-72"
@@ -123,53 +354,26 @@ function Professor_Schedule() {
         />
       </div>
       <TitleCard
-        title="Recent Transactions"
+        title="Professor Schedule"
         topMargin="mt-2"
-        TopSideButtons={
-          <TopSideButtons
-            applySearch={applySearch}
-            applyFilter={applyFilter}
-            removeFilter={removeFilter}
-          />
-        }
       >
         {/* Team Member list in table format loaded constant */}
         <div className="overflow-x-auto w-full">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email Id</th>
-                <th>Location</th>
-                <th>Amount</th>
-                <th>Transaction Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {trans.map((l, k) => {
-                return (
-                  <tr key={k}>
-                    <td>
-                      <div className="flex items-center space-x-3">
-                        <div className="avatar">
-                          <div className="mask mask-circle w-12 h-12">
-                            <img src={l.avatar} alt="Avatar" />
-                          </div>
-                        </div>
-                        <div>
-                          <div className="font-bold">{l.name}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{l.email}</td>
-                    <td>{l.location}</td>
-                    <td>${l.amount}</td>
-                    <td>{moment(l.date).format("D MMM")}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    editMode="row"
+                    rowModesModel={rowModesModel}
+                    onRowModesModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
+                    slots={{
+                        toolbar: EditToolbar,
+                    }}
+                    slotProps={{
+                        toolbar: { setRows, setRowModesModel },
+                    }}
+                />
         </div>
       </TitleCard>
     </>

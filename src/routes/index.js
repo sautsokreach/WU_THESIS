@@ -32,7 +32,7 @@ const routes = [
     component: Welcome, // view rendered
   },
   {
-    path: "/leads",
+    path: "/listSchedule",
     component: Leads,
   },
   {
@@ -40,11 +40,11 @@ const routes = [
     component: Team,
   },
   {
-    path: "/calendar",
+    path: "/professor",
     component: Calendar,
   },
   {
-    path: "/transactions",
+    path: "/generateScedule",
     component: Transactions,
   },
   {
@@ -68,11 +68,11 @@ const routes = [
     component: DocComponents,
   },
   {
-    path: "/Professor_Schedule",
+    path: "/professorSchedule",
     component: Professor_Schedule,
   },
   {
-    path: "/charts",
+    path: "/university",
     component: Charts,
   },
   {
