@@ -18,15 +18,17 @@ function Login(){
     const submitForm = (e) =>{
         e.preventDefault()
         setErrorMessage("")
-
+        
         if(loginObj.emailId.trim() === "")return setErrorMessage("Email Id is required! (use any value)")
         if(loginObj.password.trim() === "")return setErrorMessage("Password is required! (use any value)")
-        else{
+        if(loginObj.emailId.trim() == "admin" && loginObj.password.trim() == "admin"){
             setLoading(true)
             // Call API to check user credentials and save token in localstorage
             localStorage.setItem("token", "DumyTokenHere")
             setLoading(false)
-            window.location.href = '/app/welcome'
+            window.location.href = '/app/dashboard'
+        }else{
+            return  setErrorMessage("Email and Passowrd is not match")
         }
     }
 
