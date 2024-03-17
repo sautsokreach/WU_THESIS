@@ -59,15 +59,26 @@ const routes = [
     name: "Professor", // name that appear in Sidebar
   },
   {
-    path: "/app/university", // url
-    icon: <ChartBarIcon className={iconClasses} />, // icon component
-    name: "University Room And Department", // name that appear in Sidebar
-  },
-  {
     path: "/app/professorSchedule", // url
     icon: <BoltIcon className={iconClasses} />, // icon component
     name: "Professor Schedule", // name that appear in Sidebar
   },
+  {
+    path: "/app/university", // url
+    icon: <ChartBarIcon className={iconClasses} />, // icon component
+    name: "University and Faculties", // name that appear in Sidebar
+  },
+  {
+    path: "/app/faculties", // url
+    icon: <ChartBarIcon className={iconClasses} />, // icon component
+    name: "Faculties and Degree", // name that appear in Sidebar
+  },
+  {
+    path: "/app/room", // url
+    icon: <ChartBarIcon className={iconClasses} />, // icon component
+    name: "Room", // name that appear in Sidebar
+  },
+
  
   // {
   //   path: "/app/calendar", // url

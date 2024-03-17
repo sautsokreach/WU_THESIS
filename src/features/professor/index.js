@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -7,6 +7,8 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import TitleCard from "../../components/Cards/TitleCard"
+import axios from 'axios';
+import { Base_URL } from '../../../src/utils/globalConstantUtil'; 
 
 import {
     GridRowModes,
@@ -15,39 +17,18 @@ import {
     GridActionsCellItem,
     GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import {
-    randomCreatedDate,
-    randomTraderName,
-    randomId,
-    randomArrayItem,
-} from '@mui/x-data-grid-generator';
 
-const roles = ['Market', 'Finance', 'Development'];
-const randomRole = () => {
-    return randomArrayItem(roles);
-};
-
-const initialRows = [
-    {
-        id: randomId(),
-        first_name: "chhun",
-        last_name: "Vuth Chanraksmey",
-        department: "English for Communication",
-        phoneNumber: "0122234123"
-    },
-];
 
 
 function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
 
     const handleClick = () => {
-        const id = randomId();
-        setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        }));
+         setRows((oldRows) => [...oldRows, { id:0, first_name: '', last_name: '', phone_number: '',email:'',degree: ''}]);
+         setRowModesModel((oldModel) => ({
+             ...oldModel,
+             [0]: { mode: GridRowModes.Edit, fieldToFocus: 'first_name' },
+         }));
     };
 
     return (
@@ -60,9 +41,18 @@ function EditToolbar(props) {
     );
 }
 
-export default function Calendar() {
-    const [rows, setRows] = React.useState(initialRows);
+export default function Professor() {
+    const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = React.useState({});
+
+    useEffect(() => {
+        axios.get(`${Base_URL}/api/professors`)
+        .then(res => {
+            setRows(res.data)
+        })
+      }, [])
+
+
 
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -79,7 +69,11 @@ export default function Calendar() {
     };
 
     const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+        axios.delete(`${Base_URL}/api/deleteProfessor/${id}`)
+        .then(res => {
+            setRows(rows.filter((row) => row.id !== id));
+        })
+        
     };
 
     const handleCancelClick = (id) => () => {
@@ -95,9 +89,27 @@ export default function Calendar() {
     };
 
     const processRowUpdate = (newRow) => {
+        
+        if(newRow.id == 0){
+            axios.put(`${Base_URL}/api/createProfessor`,newRow)
+            .then(res => {
+                axios.get(`${Base_URL}/api/professors`)
+                .then(res => {
+                    setRows(res.data)
+                })
+            })
+        }else{
+                axios.put(`${Base_URL}/api/editProfessor/${newRow.id}`,newRow)
+                .then(res => {
+                    axios.get(`${Base_URL}/api/professors`)
+                    .then(res => {
+                        setRows(res.data)
+                    })
+            })
+        }
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
+        return updatedRow; 
     };
 
     const handleRowModesModelChange = (newRowModesModel) => {
@@ -107,15 +119,12 @@ export default function Calendar() {
     const columns = [
         { field: 'first_name', headerName: 'First Name', width: 180, editable: true },
         { field: 'last_name', headerName: 'Last Name', width: 180, editable: true },
-        {
-            field: 'department',
-            headerName: 'Department',
-            width: 220,
-            editable: true,
+        { field: 'phone_number', headerName: 'Phone Number', width: 180, editable: true },
+        { field: 'email', headerName: 'Email', width: 180, editable: true },
+        { field: 'degree', headerName: 'Degree', width: 180, editable: true,
             type: 'singleSelect',
-            valueOptions: ['Hotel & Tourism', 'Teaching English', 'English for Communication','Computer Science', 'Management', 'Marketing','Accounting', 'Banking and Finance ', 'Law','Engineering'],
+            valueOptions: ['bachelor', 'master', 'PhD'],
         },
-        { field: 'phoneNumber', headerName: 'Phone Number', width: 180, editable: true },
         {
             field: 'actions',
             type: 'actions',

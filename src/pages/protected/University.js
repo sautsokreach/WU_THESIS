@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../features/common/headerSlice'
-import Leads from '../../features/leads'
+import University from '../../features/university'
+import Department from '../../features/department'
 
 function InternalPage(){
     const dispatch = useDispatch()
@@ -12,7 +13,11 @@ function InternalPage(){
 
 
     return(
-        <Leads />
+        <div>
+            <University />
+            <Department />
+        </div>
+       
     )
 }
 

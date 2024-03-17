@@ -31,18 +31,24 @@ const initialRows = [
     {
         id: randomId(),
         room_number: 100,
+        floor: 1,
+        seat: 50,
         status: 'Available',
         comment: '',
     },
     {
         id: randomId(),
         room_number: 101,
+        floor: 1,
+        seat: 50,
         status: 'Available',
         comment: '',
     },
     {
         id: randomId(),
         room_number: 102,
+        floor: 1,
+        seat: 50,
         status: 'Available',
         comment: '',
     },
@@ -118,6 +124,8 @@ export default function FullFeaturedCrudGrid() {
 
     const columns = [
         { field: 'room_number', headerName: 'Room Number', width: 180, editable: true },
+        { field: 'floor', headerName: 'Floor', width: 180, editable: true },
+        { field: 'seat', headerName: 'Seat', width: 180, editable: true },
         {
             field: 'status',
             headerName: 'Status',

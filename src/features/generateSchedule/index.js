@@ -22,9 +22,10 @@ const GenerateButtons = () => {
   )
 };
 
-function Transactions() {
-  const currentYear = new Date().getFullYear();
-  const years = Array.from(new Array(21), (val, index) => currentYear - 10 + index);
+function GenerateSchedule() {
+   const currentYear = new Date().getFullYear();
+   const years = Array.from(new Array(21), (val, index) => ( (currentYear - 10 + index )+ " - " + (currentYear - 9 + index)) );
+  const yearsStudy =[1,2,3,4,5];
 
   useEffect(()=>{
     const dateRangePickerEl = document.getElementById('dateRangePickerId');
@@ -77,7 +78,7 @@ function Transactions() {
 
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Year</span>
+              <span className="label-text">Academic Year</span>
             </div>
             <select className="select select-bordered">
                 {years.map((year) => (
@@ -93,7 +94,7 @@ function Transactions() {
               <span className="label-text">University</span>
             </div>
             <select className="select select-bordered">
-              <option disabled defaultValue>
+              <option >
                 Toul Kork
               </option>
               <option>Toul Svay Prey</option>
@@ -129,9 +130,6 @@ function Transactions() {
               <span className="label-text">Department</span>
             </div>
             <select className="select select-bordered">
-              <option disabled defaultValue>
-                Pick one
-              </option>
               <option>Hotel & Tourism</option>
               <option>Teaching English</option>
               <option>English for Communication</option>
@@ -195,9 +193,6 @@ function Transactions() {
               <span className="label-text">Shift</span>
             </div>
             <select className="select select-bordered">
-              <option disabled defaultValue>
-                Pick one
-              </option>
               <option>Morning</option>
               <option>AfterNoon</option>
               <option>Evening</option>
@@ -213,4 +208,4 @@ function Transactions() {
   );
 }
 
-export default Transactions;
+export default GenerateSchedule;

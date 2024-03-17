@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../features/common/headerSlice'
-import Calendar from '../../features/calendar'
+import GenerateSchedule from '../../features/generateSchedule'
 
 function InternalPage(){
     const dispatch = useDispatch()
@@ -12,7 +12,7 @@ function InternalPage(){
 
 
     return(
-        <Calendar />
+        <GenerateSchedule />
     )
 }
 

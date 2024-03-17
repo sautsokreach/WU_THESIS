@@ -17,8 +17,7 @@ function InternalPage(){
     return(
         <div>
             <University />
-            <Class />
-            <Department />
+         
         </div>
     )
 }

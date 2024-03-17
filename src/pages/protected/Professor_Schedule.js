@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setPageTitle } from "../../features/common/headerSlice";
-import Professor_Schedule from "../../features/Professor_Schedule";
+import Professor_Schedule from "../../features/professorSchedule";
 
 function InternalPage() {
   const dispatch = useDispatch();
