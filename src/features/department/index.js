@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -7,6 +7,8 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import TitleCard from "../../components/Cards/TitleCard"
+import axios from 'axios';
+import { Base_URL } from '../../../src/utils/globalConstantUtil'; 
 
 import {
     GridRowModes,
@@ -20,68 +22,24 @@ import {
     randomTraderName,
     randomId,
     randomArrayItem,
-} from '@mui/x-data-grid-generator';
+  } from '@mui/x-data-grid-generator';
 
-const roles = ['Market', 'Finance', 'Development'];
-const randomRole = () => {
-    return randomArrayItem(roles);
-};
-
-const initialRows = [
-    {
-        id: randomId(),
-        department_name: "Hotel & Tourism",
-    },
-    {
-        id: randomId(),
-        department_name: "Teaching English",
-    },
-    {
-        id: randomId(),
-        department_name: "English for Communication",
-    },
-    {
-        id: randomId(),
-        department_name: "Computer Science",
-    },
-    {
-        id: randomId(),
-        department_name: "Management",
-    },
-    {
-        id: randomId(),
-        department_name: "Marketing",
-    },
-    {
-        id: randomId(),
-        department_name: "Accounting",
-    },
-    {
-        id: randomId(),
-        department_name: "Banking and Finance ",
-    },
-    {
-        id: randomId(),
-        department_name: "Law",
-    },
-    {
-        id: randomId(),
-        department_name: "Engineering",
-    },
-    
-];
-
+function getListDepartment(setRows){
+    axios.get(`${Base_URL}/api/departments`)
+    .then(res => {
+        setRows(res.data.map((item) =>({...item,id:item.department_id})))
+    })
+}
 
 function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
-
+    const id = randomId();
     const handleClick = () => {
-        const id = randomId();
-        setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        }));
+         setRows((oldRows) => [...oldRows, { id, name_en: '', name_kh: '', website: '',location:'',logo: ''}]);
+         setRowModesModel((oldModel) => ({
+             ...oldModel,
+             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'first_name' },
+         }));
     };
 
     return (
@@ -94,9 +52,15 @@ function EditToolbar(props) {
     );
 }
 
-export default function FullFeaturedCrudGrid() {
-    const [rows, setRows] = React.useState(initialRows);
+export default function University() {
+    const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = React.useState({});
+
+    useEffect(() => {
+        getListDepartment(setRows)
+      }, [])
+
+
 
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -113,7 +77,11 @@ export default function FullFeaturedCrudGrid() {
     };
 
     const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+        axios.delete(`${Base_URL}/api/deleteDepartment/${id}`)
+        .then(res => {
+            setRows(rows.filter((row) => row.id !== id));
+        })
+        
     };
 
     const handleCancelClick = (id) => () => {
@@ -129,15 +97,27 @@ export default function FullFeaturedCrudGrid() {
     };
 
     const processRowUpdate = (newRow) => {
+        console.log(isNaN(newRow.id))
+        console.log(newRow.id)
+        if( isNaN(newRow.id)){
+            axios.post(`${Base_URL}/api/createDepartment`,newRow)
+            .then(res => {
+                getListDepartment(setRows)
+            })
+        }else{
+                axios.put(`${Base_URL}/api/editDepartment/${newRow.id}`,newRow)
+                .then(res => {
+                    getListDepartment(setRows)
+            })
+        }
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
+        return updatedRow; 
     };
 
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
-
     const columns = [
         { field: 'department_name', headerName: 'Department Name', width: 180, editable: true },
         {
@@ -189,7 +169,7 @@ export default function FullFeaturedCrudGrid() {
     ];
 
     return (
-        <TitleCard title="Department" topMargin="mt-2" >
+        <TitleCard title="Faculties" topMargin="mt-2" >
             <Box
                 sx={{
                     height: 500,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -7,6 +7,8 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import TitleCard from "../../components/Cards/TitleCard"
+import axios from 'axios';
+import { Base_URL } from '../../../src/utils/globalConstantUtil'; 
 
 import {
     GridRowModes,
@@ -20,62 +22,23 @@ import {
     randomTraderName,
     randomId,
     randomArrayItem,
-} from '@mui/x-data-grid-generator';
-
-const roles = ['Market', 'Finance', 'Development'];
-const randomRole = () => {
-    return randomArrayItem(roles);
-};
-
-const initialRows = [
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 25,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 36,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 19,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 28,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 23,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-];
-
+  } from '@mui/x-data-grid-generator';
+function getListUniversity(setRows){
+    axios.get(`${Base_URL}/api/universities`)
+    .then(res => {
+        setRows(res.data.map((item) =>({...item,id:item.university_id})))
+    })
+}
 
 function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
-
+    const id = randomId();
     const handleClick = () => {
-        const id = randomId();
-        setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        }));
+         setRows((oldRows) => [...oldRows, { id, name_en: '', name_kh: '', website: '',location:'',logo: ''}]);
+         setRowModesModel((oldModel) => ({
+             ...oldModel,
+             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'first_name' },
+         }));
     };
 
     return (
@@ -88,9 +51,15 @@ function EditToolbar(props) {
     );
 }
 
-export default function FullFeaturedCrudGrid() {
-    const [rows, setRows] = React.useState(initialRows);
+export default function University() {
+    const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = React.useState({});
+
+    useEffect(() => {
+        getListUniversity(setRows)
+      }, [])
+
+
 
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -107,7 +76,11 @@ export default function FullFeaturedCrudGrid() {
     };
 
     const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+        axios.delete(`${Base_URL}/api/deleteUniversity/${id}`)
+        .then(res => {
+            setRows(rows.filter((row) => row.id !== id));
+        })
+        
     };
 
     const handleCancelClick = (id) => () => {
@@ -123,90 +96,102 @@ export default function FullFeaturedCrudGrid() {
     };
 
     const processRowUpdate = (newRow) => {
+        console.log(isNaN(newRow.id))
+        console.log(newRow.id)
+        if( isNaN(newRow.id)){
+            axios.post(`${Base_URL}/api/createUniversity`,newRow)
+            .then(res => {
+                getListUniversity(setRows)
+            })
+        }else{
+                axios.put(`${Base_URL}/api/editUniversity/${newRow.id}`,newRow)
+                .then(res => {
+                    getListUniversity(setRows)
+            })
+        }
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
+        return updatedRow; 
     };
 
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
-
     const columns = [
-        { field: 'name_en', headerName: 'English Name', width: 200, editable: true },
-        {
-            field: 'name_kh',
-            headerName: 'Khmer Name',
-            width: 300,
-            align: 'left',
-            headerAlign: 'left',
-            editable: true,
-        },
-        {
-            field: 'location',
-            headerName: 'Location',
-            width: 300,
-            editable: true,
-        },
-        {
-            field: 'website',
-            headerName: 'Website',
-            width: 200,
-            editable: true,
-        },
-        {
-            field: 'logo',
-            headerName: 'Logo',
-            width: 200,
-            editable: true,
-        },
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Actions',
-            width: 100,
-            cellClassName: 'actions',
-            getActions: ({ id }) => {
-                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-                if (isInEditMode) {
+            { field: 'name_en', headerName: 'English Name', width: 200, editable: true },
+            {
+                field: 'name_kh',
+                headerName: 'Khmer Name',
+                width: 300,
+                align: 'left',
+                headerAlign: 'left',
+                editable: true,
+            },
+            {
+                field: 'location',
+                headerName: 'Location',
+                width: 300,
+                editable: true,
+            },
+            {
+                field: 'website',
+                headerName: 'Website',
+                width: 200,
+                editable: true,
+            },
+            {
+                field: 'logo',
+                headerName: 'Logo',
+                width: 200,
+                editable: true,
+            },
+            {
+                field: 'actions',
+                type: 'actions',
+                headerName: 'Actions',
+                width: 100,
+                cellClassName: 'actions',
+                getActions: ({ id }) => {
+                    const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+    
+                    if (isInEditMode) {
+                        return [
+                            <GridActionsCellItem
+                                icon={<SaveIcon />}
+                                label="Save"
+                                sx={{
+                                    color: 'primary.main',
+                                }}
+                                onClick={handleSaveClick(id)}
+                            />,
+                            <GridActionsCellItem
+                                icon={<CancelIcon />}
+                                label="Cancel"
+                                className="textPrimary"
+                                onClick={handleCancelClick(id)}
+                                color="inherit"
+                            />,
+                        ];
+                    }
+    
                     return [
                         <GridActionsCellItem
-                            icon={<SaveIcon />}
-                            label="Save"
-                            sx={{
-                                color: 'primary.main',
-                            }}
-                            onClick={handleSaveClick(id)}
+                            icon={<EditIcon />}
+                            label="Edit"
+                            className="textPrimary"
+                            onClick={handleEditClick(id)}
+                            color="inherit"
                         />,
                         <GridActionsCellItem
-                            icon={<CancelIcon />}
-                            label="Cancel"
-                            className="textPrimary"
-                            onClick={handleCancelClick(id)}
+                            icon={<DeleteIcon />}
+                            label="Delete"
+                            onClick={handleDeleteClick(id)}
                             color="inherit"
                         />,
                     ];
-                }
-
-                return [
-                    <GridActionsCellItem
-                        icon={<EditIcon />}
-                        label="Edit"
-                        className="textPrimary"
-                        onClick={handleEditClick(id)}
-                        color="inherit"
-                    />,
-                    <GridActionsCellItem
-                        icon={<DeleteIcon />}
-                        label="Delete"
-                        onClick={handleDeleteClick(id)}
-                        color="inherit"
-                    />,
-                ];
+                },
             },
-        },
-    ];
+        ];
 
     return (
         <TitleCard title="University" topMargin="mt-2" >

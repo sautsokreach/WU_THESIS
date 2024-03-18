@@ -17,17 +17,27 @@ import {
     GridActionsCellItem,
     GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-
-
+import {
+    randomCreatedDate,
+    randomTraderName,
+    randomId,
+    randomArrayItem,
+  } from '@mui/x-data-grid-generator';
+function getListProfessor(setRows){
+    axios.get(`${Base_URL}/api/professors`)
+    .then(res => {
+        setRows(res.data.map((item) =>({...item,id:item.professor_id})))
+    })
+}
 
 function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
-
+    const id = randomId();
     const handleClick = () => {
-         setRows((oldRows) => [...oldRows, { id:0, first_name: '', last_name: '', phone_number: '',email:'',degree: ''}]);
+         setRows((oldRows) => [...oldRows, { id, first_name: '', last_name: '', phone_number: '',email:'',degree: ''}]);
          setRowModesModel((oldModel) => ({
              ...oldModel,
-             [0]: { mode: GridRowModes.Edit, fieldToFocus: 'first_name' },
+             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'first_name' },
          }));
     };
 
@@ -46,10 +56,7 @@ export default function Professor() {
     const [rowModesModel, setRowModesModel] = React.useState({});
 
     useEffect(() => {
-        axios.get(`${Base_URL}/api/professors`)
-        .then(res => {
-            setRows(res.data)
-        })
+        getListProfessor(setRows)
       }, [])
 
 
@@ -89,22 +96,17 @@ export default function Professor() {
     };
 
     const processRowUpdate = (newRow) => {
-        
-        if(newRow.id == 0){
-            axios.put(`${Base_URL}/api/createProfessor`,newRow)
+        console.log(isNaN(newRow.id))
+        console.log(newRow.id)
+        if( isNaN(newRow.id)){
+            axios.post(`${Base_URL}/api/createProfessor`,newRow)
             .then(res => {
-                axios.get(`${Base_URL}/api/professors`)
-                .then(res => {
-                    setRows(res.data)
-                })
+                getListProfessor(setRows)
             })
         }else{
                 axios.put(`${Base_URL}/api/editProfessor/${newRow.id}`,newRow)
                 .then(res => {
-                    axios.get(`${Base_URL}/api/professors`)
-                    .then(res => {
-                        setRows(res.data)
-                    })
+                    getListProfessor(setRows)
             })
         }
         const updatedRow = { ...newRow, isNew: false };
@@ -131,7 +133,7 @@ export default function Professor() {
             headerName: 'Actions',
             width: 100,
             cellClassName: 'actions',
-            getActions: ({ id }) => {
+            getActions: ({ id }) => {       
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
                 if (isInEditMode) {

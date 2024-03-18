@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -7,6 +7,8 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import TitleCard from "../../components/Cards/TitleCard"
+import axios from 'axios';
+import { Base_URL } from '../../../src/utils/globalConstantUtil'; 
 
 import {
     GridRowModes,
@@ -20,88 +22,23 @@ import {
     randomTraderName,
     randomId,
     randomArrayItem,
-} from '@mui/x-data-grid-generator';
-
-const roles = ['Market', 'Finance', 'Development'];
-const randomRole = () => {
-    return randomArrayItem(roles);
-};
-
-const initialRows = [
-    {
-        id: randomId(),
-        department_name: "Hotel & Tourism",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    {
-        id: randomId(),
-        department_name: "Teaching English",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    {
-        id: randomId(),
-        department_name: "English for Communication",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    {
-        id: randomId(),
-        department_name: "Computer Science",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    {
-        id: randomId(),
-        department_name: "Management",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    {
-        id: randomId(),
-        department_name: "Marketing",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    {
-        id: randomId(),
-        department_name: "Accounting",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    {
-        id: randomId(),
-        department_name: "Banking and Finance ",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    {
-        id: randomId(),
-        department_name: "Law",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    {
-        id: randomId(),
-        department_name: "Engineering",
-        degreeLevel: "bachelor",
-        degreeName: "Hotel & Tourism"
-    },
-    
-];
-
+  } from '@mui/x-data-grid-generator';
+function getListRoom(setRows){
+    axios.get(`${Base_URL}/api/rooms`)
+    .then(res => {
+        setRows(res.data.map((item) =>({...item,id:item.room_id})))
+    })
+}
 
 function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
-
+    const id = randomId();
     const handleClick = () => {
-        const id = randomId();
-        setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        }));
+         setRows((oldRows) => [...oldRows, { id, room_number: '', floor: '', seat: '',comment:'',status: ''}]);
+         setRowModesModel((oldModel) => ({
+             ...oldModel,
+             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'first_name' },
+         }));
     };
 
     return (
@@ -114,9 +51,15 @@ function EditToolbar(props) {
     );
 }
 
-export default function FullFeaturedCrudGrid() {
-    const [rows, setRows] = React.useState(initialRows);
+export default function University() {
+    const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = React.useState({});
+
+    useEffect(() => {
+        getListRoom(setRows)
+      }, [])
+
+
 
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -133,7 +76,11 @@ export default function FullFeaturedCrudGrid() {
     };
 
     const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+        axios.delete(`${Base_URL}/api/deleteRoom/${id}`)
+        .then(res => {
+            setRows(rows.filter((row) => row.id !== id));
+        })
+        
     };
 
     const handleCancelClick = (id) => () => {
@@ -149,15 +96,27 @@ export default function FullFeaturedCrudGrid() {
     };
 
     const processRowUpdate = (newRow) => {
+        console.log(isNaN(newRow.id))
+        console.log(newRow.id)
+        if( isNaN(newRow.id)){
+            axios.post(`${Base_URL}/api/createRoom`,newRow)
+            .then(res => {
+                getListRoom(setRows)
+            })
+        }else{
+                axios.put(`${Base_URL}/api/editRoom/${newRow.id}`,newRow)
+                .then(res => {
+                    getListRoom(setRows)
+            })
+        }
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
+        return updatedRow; 
     };
 
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
-
     const columns = [
         { field: 'department_name', headerName: 'Department Name', width: 180, editable: true },
         { field: 'degreeLevel', headerName: 'Degree Level', width: 180, editable: true },
@@ -209,9 +168,8 @@ export default function FullFeaturedCrudGrid() {
             },
         },
     ];
-
     return (
-        <TitleCard title="Department" topMargin="mt-2" >
+        <TitleCard title="Room" topMargin="mt-2" >
             <Box
                 sx={{
                     height: 500,
