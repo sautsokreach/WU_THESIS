@@ -14,6 +14,7 @@ const Professor_Schedule = lazy(() =>
   import("../pages/protected/Professor_Schedule")
 );
 const Professor = lazy(() => import("../pages/protected/Professor"));
+const Subject = lazy(() => import("../pages/protected/Subject"));
 const Team = lazy(() => import("../pages/protected/Team"));
 const GenerateScedule = lazy(() => import("../pages/protected/GenerateSchedule"));
 const Bills = lazy(() => import("../pages/protected/Bills"));
@@ -72,6 +73,10 @@ const routes = [
   {
     path: "/professorSchedule",
     component: Professor_Schedule,
+  },
+  {
+    path: "/subject",
+    component: Subject,
   },
   {
     path: "/room",

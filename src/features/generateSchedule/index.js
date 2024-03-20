@@ -25,7 +25,7 @@ const GenerateButtons = () => {
 function GenerateSchedule() {
    const currentYear = new Date().getFullYear();
    const years = Array.from(new Array(21), (val, index) => ( (currentYear - 10 + index )+ " - " + (currentYear - 9 + index)) );
-  const yearsStudy =[1,2,3,4,5];
+   const yearsStudy =[1,2,3,4,5];
 
   useEffect(()=>{
     const dateRangePickerEl = document.getElementById('dateRangePickerId');

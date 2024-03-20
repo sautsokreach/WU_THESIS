@@ -16,6 +16,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
+import axios from "axios";
+import { Base_URL } from "../../../src/utils/globalConstantUtil";
 import {
   GridRowModes,
   DataGrid,
@@ -77,9 +79,9 @@ function EditToolbar(props) {
 
         <GridToolbarContainer>
             {/* <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}> */}
-            <Button color="primary" startIcon={<AddIcon />} >
+            {/* <Button color="primary" startIcon={<AddIcon />} >
                 Submit
-            </Button>
+            </Button> */}
         </GridToolbarContainer>
     );
 }
@@ -157,9 +159,22 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   );
 };
 
-function Professor_Schedule() {
-  const [trans, setTrans] = useState(RECENT_TRANSACTIONS);
-
+function Professor_Schedule({schedule}) {
+  const [trans, setTrans] = React.useState(RECENT_TRANSACTIONS);
+  const [rows, setRows] = React.useState([]);
+  const [rowModesModel, setRowModesModel] = React.useState({});
+  useEffect(() => {
+    if (schedule.id != ''){
+      var item = schedule.schedule;
+      let row = [
+        {id:randomId(),time:'08:00 - 11:00',monday:item.morning.monday,tuesday:item.morning.tuesday,wednesday:item.morning.wednesday,thursday:item.morning.thursday,friday:item.morning.friday,saturday:item.morning.saturday,sunday:item.morning.sunday},
+        {id:randomId(),time:'14:00 - 17:00',monday:item.afternoon.monday,tuesday:item.afternoon.tuesday,wednesday:item.afternoon.wednesday,thursday:item.afternoon.thursday,friday:item.afternoon.friday,saturday:item.afternoon.saturday,sunday:item.afternoon.sunday},
+        {id:randomId(),time:'17:30 - 20:30',monday:item.evening.monday,tuesday:item.evening.tuesday,wednesday:item.evening.wednesday,thursday:item.evening.thursday,friday:item.evening.friday,saturday:item.evening.saturday,sunday:item.evening.sunday}
+        
+      ]
+      setRows(row)
+    }
+  }, [schedule]);
   const removeFilter = () => {
     setTrans(RECENT_TRANSACTIONS);
   };
@@ -182,8 +197,7 @@ function Professor_Schedule() {
     setTrans(filteredTransactions);
   };
 
-  const [rows, setRows] = React.useState(initialRows);
-  const [rowModesModel, setRowModesModel] = React.useState({});
+
 
   const handleRowEditStop = (params, event) => {
       if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -216,10 +230,32 @@ function Professor_Schedule() {
   };
 
   const processRowUpdate = (newRow) => {
-      const updatedRow = { ...newRow, isNew: false };
+    const updatedRow = { ...newRow, isNew: false };
+    let editrow = rows.map((row) => (row.id === newRow.id ? updatedRow : row));
+    let input = {}
+    input.morning = input.morning ?? {}
+    input.afternoon = input.afternoon ?? {}
+    input.evening = input.evening ?? {}
+    let shift = ['morning','afternoon','evening'];
+    let index = 0;
+    editrow.forEach(row => {
+        input[shift[index]].monday = row.monday
+        input[shift[index]].tuesday = row.tuesday
+        input[shift[index]].wednesday = row.wednesday
+        input[shift[index]].thursday = row.thursday
+        input[shift[index]].friday = row.friday
+        input[shift[index]].saturday = row.saturday
+        input[shift[index]].sunday = row.sunday
+      index ++;
+    })
+    console.log(input)
+     axios.put(`${Base_URL}/api/professorScheduleDay/${newRow.id}`,{professor_schedule_id:schedule.id,professor_schedule_day:input}).then((res) => {
+     });
+      
       setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
       return updatedRow;
   };
+
 
   const handleRowModesModelChange = (newRowModesModel) => {
       setRowModesModel(newRowModesModel);
@@ -321,13 +357,7 @@ function Professor_Schedule() {
                       className="textPrimary"
                       onClick={handleEditClick(id)}
                       color="inherit"
-                  />,
-                  <GridActionsCellItem
-                      icon={<DeleteIcon />}
-                      label="Delete"
-                      onClick={handleDeleteClick(id)}
-                      color="inherit"
-                  />,
+                  />
               ];
           },
       },
@@ -335,24 +365,6 @@ function Professor_Schedule() {
 
   return ( 
     <>
-      <div className="grid grid-cols-3 sm:grid-cols-3 ">
-        <SelectBox
-          options={listTeacher}
-          labelTitle="Period"
-          placeholder="Select date range"
-          containerStyle="w-72"
-          labelStyle="hidden"
-          defaultValue="TODAY"
-        />
-        <SelectBox
-          options={listSubject}
-          labelTitle="Period"
-          placeholder="Select date range"
-          containerStyle="w-72"
-          labelStyle="hidden"
-          defaultValue="TODAY"
-        />
-      </div>
       <TitleCard
         title="Professor Schedule"
         topMargin="mt-2"

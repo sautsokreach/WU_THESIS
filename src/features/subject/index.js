@@ -23,10 +23,10 @@ import {
     randomId,
     randomArrayItem,
   } from '@mui/x-data-grid-generator';
-function getListProfessor(setRows){
-    axios.get(`${Base_URL}/api/professors`)
+function getListSujbect(setRows){
+    axios.get(`${Base_URL}/api/subjects`)
     .then(res => {
-        setRows(res.data.map((item) =>({...item,id:item.professor_id})))
+        setRows(res.data.map((item) =>({...item,id:item.subject_id})))
     })
 }
 
@@ -34,10 +34,10 @@ function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
     const id = randomId();
     const handleClick = () => {
-         setRows((oldRows) => [...oldRows, { id, first_name: '', last_name: '', phone_number: '',email:'',degree: ''}]);
+         setRows((oldRows) => [...oldRows, { id, subject_name: '', subject_code: ''}]);
          setRowModesModel((oldModel) => ({
              ...oldModel,
-             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'first_name' },
+             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'subject_name' },
          }));
     };
 
@@ -51,12 +51,12 @@ function EditToolbar(props) {
     );
 }
 
-export default function Professor() {
+export default function Subject() {
     const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = React.useState({});
 
     useEffect(() => {
-        getListProfessor(setRows)
+        getListSujbect(setRows)
       }, [])
 
 
@@ -76,7 +76,7 @@ export default function Professor() {
     };
 
     const handleDeleteClick = (id) => () => {
-        axios.delete(`${Base_URL}/api/deleteProfessor/${id}`)
+        axios.delete(`${Base_URL}/api/deleteSubject/${id}`)
         .then(res => {
             setRows(rows.filter((row) => row.id !== id));
         })
@@ -99,14 +99,14 @@ export default function Professor() {
         console.log(isNaN(newRow.id))
         console.log(newRow.id)
         if( isNaN(newRow.id)){
-            axios.post(`${Base_URL}/api/createProfessor`,newRow)
+            axios.post(`${Base_URL}/api/createSubject`,newRow)
             .then(res => {
-                getListProfessor(setRows)
+                getListSujbect(setRows)
             })
         }else{
-                axios.put(`${Base_URL}/api/editProfessor/${newRow.id}`,newRow)
+                axios.put(`${Base_URL}/api/editSubject/${newRow.id}`,newRow)
                 .then(res => {
-                    getListProfessor(setRows)
+                    getListSujbect(setRows)
             })
         }
         const updatedRow = { ...newRow, isNew: false };
@@ -117,29 +117,17 @@ export default function Professor() {
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
-
     const columns = [
-        { field: 'first_name', headerName: 'First Name', width: 180, editable: true },
-        { field: 'last_name', headerName: 'Last Name', width: 180, editable: true },
-        { field: 'phone_number', headerName: 'Phone Number', width: 180, editable: true },
-        { field: 'email', headerName: 'Email', width: 180, editable: true },
-        { field: 'degree', headerName: 'Degree', width: 180, editable: true,
-            type: 'singleSelect',
-            getOptionValue: (value) => value.code,
-            getOptionLabel: (value) => value.name,
-            valueOptions: [
-                { code: 'bachelor', name: 'Bachelor' },
-                { code: 'master', name: 'Master' },
-                { code: 'PhD', name: 'PhD' }
-            ]
-        },
+        { field: 'subject_name', headerName: 'Subject Name', width: 180, editable: true },
+        { field: 'subject_code', headerName: 'Code ', width: 180, editable: true },
+        //{ field: 'department_name', headerName: 'Faculty', width: 180, editable: true },
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
             width: 100,
             cellClassName: 'actions',
-            getActions: ({ id }) => {       
+            getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
                 if (isInEditMode) {
@@ -180,9 +168,8 @@ export default function Professor() {
             },
         },
     ];
-
     return (
-        <TitleCard title="Professor" topMargin="mt-2" >
+        <TitleCard title="Subject" topMargin="mt-2" >
             <Box
                 sx={{
                     height: 500,

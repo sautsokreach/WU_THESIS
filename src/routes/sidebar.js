@@ -78,7 +78,11 @@ const routes = [
     icon: <ChartBarIcon className={iconClasses} />, // icon component
     name: "Room", // name that appear in Sidebar
   },
-
+  {
+    path: "/app/subject", // url
+    icon: <ChartBarIcon className={iconClasses} />, // icon component
+    name: "Subjects", // name that appear in Sidebar
+  },
  
   // {
   //   path: "/app/calendar", // url
