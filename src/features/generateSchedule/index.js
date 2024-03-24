@@ -1,61 +1,42 @@
-import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { showNotification } from "../common/headerSlice";
 import TitleCard from "../../components/Cards/TitleCard";
-import { RECENT_TRANSACTIONS } from "../../utils/dummyData";
-import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
-import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
-import SearchBar from "../../components/Input/SearchBar";
-import DateRangePicker from "flowbite-datepicker/DateRangePicker";
+import ScheduleTemplete from "../scheduleTemplete";
+import axios from 'axios';
+import { Base_URL } from '../../../src/utils/globalConstantUtil';
+import Datepicker from "react-tailwindcss-datepicker";
 
-const GenerateButtons = () => {
-  const dispatch = useDispatch()
-
-  const addNewTeamMember = () => {
-     // dispatch(showNotification({message : "Add New Member clicked", status : 1}))
-  }
-  return(
-      <div className="inline-block float-right">
-          <button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => addNewTeamMember()}>Generate Schedule</button>
-      </div>
-  )
-};
+function getListDepartment(setRows) {
+  axios.get(`${Base_URL}/api/departments`)
+    .then(res => {
+      setRows(res.data)
+    })
+}
 
 function GenerateSchedule() {
-   const currentYear = new Date().getFullYear();
-   const years = Array.from(new Array(21), (val, index) => ( (currentYear - 10 + index )+ " - " + (currentYear - 9 + index)) );
-   const yearsStudy =[1,2,3,4,5];
+  const [data, setData] = useState(null)
+  const [department, setDepartment] = useState([])
+  const [input, setInput] = useState({})
+  const currentYear = new Date().getFullYear();
+  const years = Array.from(new Array(21), (val, index) => ((currentYear - 10 + index) + " - " + (currentYear - 9 + index)));
+  const [dateValue, setDateValue] = useState({
+    startDate: new Date(),
+    endDate: new Date()
+  });
 
-  useEffect(()=>{
-    const dateRangePickerEl = document.getElementById('dateRangePickerId');
-    new DateRangePicker(dateRangePickerEl, {
-        // options
-    }); 
-  })
+  const handleDatePickerValueChange = (newValue) => {
+    console.log("newValue:", newValue);
+    setDateValue(input);
+    setInput({ ...input, statTerm: newValue.startDate, endTerm: newValue.endDate });
+    // updateDashboardPeriod(newValue)
+  }
 
-  const [trans, setTrans] = useState(RECENT_TRANSACTIONS);
-
-  const removeFilter = () => {
-    setTrans(RECENT_TRANSACTIONS);
-  };
-
-  const applyFilter = (params) => {
-    let filteredTransactions = RECENT_TRANSACTIONS.filter((t) => {
-      return t.location == params;
-    });
-    setTrans(filteredTransactions);
-  };
-
-  // Search according to name
-  const applySearch = (value) => {
-    let filteredTransactions = RECENT_TRANSACTIONS.filter((t) => {
-      return (
-        t.email.toLowerCase().includes(value.toLowerCase()) ||
-        t.email.toLowerCase().includes(value.toLowerCase())
-      );
-    });
-    setTrans(filteredTransactions);
+  useEffect(() => {
+    getListDepartment(setDepartment)
+  }, [])
+  const onChange = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value })
+    console.log(input);
   };
 
   return (
@@ -67,11 +48,13 @@ function GenerateSchedule() {
         <div className="grid grid-cols-3 gap-y-5">
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Title</span>
+              <span className="label-text">Description</span>
             </div>
             <input
+              onChange={onChange}
+              name='description'
               type="text"
-              placeholder="Input Title"
+              placeholder="Input Description"
               className="input input-bordered w-full max-w-xs"
             />
           </label>
@@ -80,25 +63,25 @@ function GenerateSchedule() {
             <div className="label">
               <span className="label-text">Academic Year</span>
             </div>
-            <select className="select select-bordered">
-                {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
+            <select className="select select-bordered" name="academic" onChange={onChange}>
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
             </select>
           </label>
 
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">University</span>
+              <span className="label-text">year</span>
             </div>
-            <select className="select select-bordered">
-              <option >
-                Toul Kork
-              </option>
-              <option>Toul Svay Prey</option>
-              <option>KomPong Cham</option>
+            <select className="select select-bordered" name="year" onChange={onChange}>
+              <option value='1' >I</option>
+              <option value='2' >II</option>
+              <option value='3' >III</option>
+              <option value='4' >IV</option>
+              <option value='5' >V</option>
             </select>
           </label>
 
@@ -107,7 +90,9 @@ function GenerateSchedule() {
               <span className="label-text">Batch</span>
             </div>
             <input
-              type="text"
+              type="number"
+              name="batch"
+              onChange={onChange}
               placeholder="Input Title"
               className="input input-bordered w-full max-w-xs"
             />
@@ -117,11 +102,9 @@ function GenerateSchedule() {
             <div className="label">
               <span className="label-text">Semester</span>
             </div>
-            <select className="select select-bordered">
-              <option>
-                1
-              </option>
-              <option>2</option>
+            <select className="select select-bordered" name="semester" onChange={onChange}>
+              <option value="1">1</option>
+              <option value="2">2</option>
             </select>
           </label>
 
@@ -129,81 +112,52 @@ function GenerateSchedule() {
             <div className="label">
               <span className="label-text">Department</span>
             </div>
-            <select className="select select-bordered">
-              <option>Hotel & Tourism</option>
-              <option>Teaching English</option>
-              <option>English for Communication</option>
-              <option>Computer Science</option>
-              <option>Management</option>
-              <option>Marketing</option>
-              <option>Accounting</option>
-              <option>Banking and Finance </option>
-              <option>Law</option>
-              <option>Engineering</option>
+            <select className="select select-bordered" name="department" onChange={onChange}>
+              {department.map((i) => (
+                <option value={i.department_id}>{i.department_name}</option>
+              ))}
+
             </select>
           </label>
-          <label className="form-control w-full  col-span-2">
-            <div className="label w-full">
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
               <span className="label-text">Term</span>
             </div>
-            <div id="dateRangePickerId" class="flex items-center">
-              <div class="relative">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                  <svg
-                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                  </svg>
-                </div>
-                <input
-                  name="start"
-                  type="text"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Select date start"
-                />
-              </div>
-              <span class="mx-4 text-gray-500">to</span>
-              <div class="relative">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                  <svg
-                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                  </svg>
-                </div>
-                <input
-                  name="end"
-                  type="text"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Select date end"
-                />
-              </div>
-            </div>
+            <Datepicker
+              containerClassName="w-72 "
+              value={dateValue}
+              theme={"light"}
+              inputClassName="input input-bordered w-72"
+              popoverDirection={"down"}
+              toggleClassName="invisible"
+              onChange={handleDatePickerValueChange}
+              showShortcuts={true}
+              primaryColor={"white"}
+            />
+
+
           </label>
           <label className="form-control w-full max-w-xs col-span-1">
             <div className="label">
               <span className="label-text">Shift</span>
             </div>
-            <select className="select select-bordered">
-              <option>Morning</option>
-              <option>AfterNoon</option>
-              <option>Evening</option>
-              <option>Weekend</option>
+            <select className="select select-bordered" name="shift" onChange={onChange}>
+              <option value="morning">Morning</option>
+              <option value="afterNoon">AfterNoon</option>
+              <option value="evening">Evening</option>
+              <option value="weekend">Weekend</option>
             </select>
           </label>
         </div>
         <div className="form-control w-full  col-span-3 items-center my-10">
-            {GenerateButtons()}
+          <div className="inline-block float-right">
+            <button className="btn px-6 btn-sm normal-case btn-primary" onClick={()=>setData(input)}>Generate Schedule</button>
+          </div>
         </div >
       </TitleCard>
+      <br></br>
+
+      <ScheduleTemplete data={data} />
     </>
   );
 }
