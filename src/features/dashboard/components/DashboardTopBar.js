@@ -28,7 +28,7 @@ function DashboardTopBar({updateDashboardPeriod}){
         const handleDatePickerValueChange = (newValue) => {
             console.log("newValue:", newValue); 
             setDateValue(newValue); 
-            updateDashboardPeriod(newValue)
+            //updateDashboardPeriod(newValue)
         } 
 
 

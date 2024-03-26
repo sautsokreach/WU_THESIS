@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+@font-face {
+  font-family: 'KhmerOsMoulLight';
+  src: local('khmer'), url(./font/KhmerOSMuolLightRegular.ttf) format('opentype');
+}
+
+
