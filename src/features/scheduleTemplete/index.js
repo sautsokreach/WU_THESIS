@@ -29,10 +29,11 @@ function getListUniversity(setRows) {
   });
 }
 
-export default function ScheduleTemplete({ data, setInput }) {
+export default function ScheduleTemplete({ data }) {
   const [professor, setProfessor] = useState([]);
   const [room, setRoom] = useState([]);
   const [subject, setSubject] = useState([]);
+  const [input,setInput] = useState(data);
 
   const currentDate = new Date(); // C
   // Define options for formatting the date
@@ -58,21 +59,22 @@ export default function ScheduleTemplete({ data, setInput }) {
     });
   }, [data]);
   const elementToPrintRef = useRef(null);
-  const handlePrint = () => {
-    const elementToPrint = elementToPrintRef.current;
-    console.error(elementToPrint);
-    if (elementToPrint) {
-      const printWindow = window.open();
-      printWindow.document.write(elementToPrint.innerHTML);
-      printWindow.document.close();
-      setTimeout(() => printWindow.print(), 200); // Trigger the print dialog
-    } else {
-      console.error("Element to print not found.");
-    }
+  const handleSave = () => {
+    console.log(input)
+    // const elementToPrint = elementToPrintRef.current;
+    // console.error(elementToPrint);
+    // if (elementToPrint) {
+    //   const printWindow = window.open();
+    //   printWindow.document.write(elementToPrint.innerHTML);
+    //   printWindow.document.close();
+    //   setTimeout(() => printWindow.print(), 200); // Trigger the print dialog
+    // } else {
+    //   console.error("Element to print not found.");
+    // }
   };
 
   const onChangeInput = (e) => {
-    setInput({ ...data, [e.target.name]: e.target.value });
+    setInput({ ...input, [e.target.name]: e.target.value });
   };
 
   return (
@@ -157,7 +159,7 @@ export default function ScheduleTemplete({ data, setInput }) {
               }
               
               .col > * {
-                padding: 0;
+                padding: 5px;
                 margin: 5px;
               }
               
@@ -243,12 +245,12 @@ export default function ScheduleTemplete({ data, setInput }) {
                 <td rowSpan="2">
                   <div class="col">
                     <select
-                      className="select select-bordered "
+                      className="select select-bordered w-3/4"
                       name="subject"
                       onChange={() => {}}
                     >
-                      <option selected disabled value="Please Select Subject">
-                        Please Select Subject
+                      <option selected disabled value=" Subject">
+                        Subject
                       </option>
                       {subject.map((i) => (
                         <option value={i.subject_id}>{i.subject_name}</option>
@@ -257,12 +259,12 @@ export default function ScheduleTemplete({ data, setInput }) {
                     <p>Finance Report Analysis</p>
                     <p>Code FIX10</p>
                     <select
-                      className="select select-bordered"
+                      className="select select-bordered w-3/4"
                       name="professor"
                       onChange={() => {}}
                     >
-                      <option selected disabled value="Please Select Professor">
-                        Please Select Professor
+                      <option selected disabled value=" Professor">
+                        Professor
                       </option>
                       {professor.map((i) => (
                         <option value={i.professor_id}>
@@ -273,12 +275,12 @@ export default function ScheduleTemplete({ data, setInput }) {
                     <p>Tel: 012548456</p>
 
                     <select
-                      className="select select-bordered"
+                      className="select select-bordered w-3/4"
                       name="room"
                       onChange={() => {}}
                     >
-                      <option selected disabled value="Please Select Room">
-                        Please Select Room
+                      <option selected disabled value=" Room">
+                        Room
                       </option>
                       {room.map((i) => (
                         <option value={i.room_id}>{i.room_number}</option>
@@ -287,39 +289,187 @@ export default function ScheduleTemplete({ data, setInput }) {
                   </div>
                 </td>
                 <td rowSpan="2">
-                  <div class="col">
+                <div class="col">
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="subject"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Subject">
+                        Subject
+                      </option>
+                      {subject.map((i) => (
+                        <option value={i.subject_id}>{i.subject_name}</option>
+                      ))}
+                    </select>
                     <p>Finance Report Analysis</p>
                     <p>Code FIX10</p>
-                    <p>Mr KOY Sokun</p>
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="professor"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Professor">
+                        Professor
+                      </option>
+                      {professor.map((i) => (
+                        <option value={i.professor_id}>
+                          {i.first_name} {i.last_name}
+                        </option>
+                      ))}
+                    </select>
                     <p>Tel: 012548456</p>
-                    <p>Room: 104</p>
+
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="room"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Room">
+                        Room
+                      </option>
+                      {room.map((i) => (
+                        <option value={i.room_id}>{i.room_number}</option>
+                      ))}
+                    </select>
                   </div>
                 </td>
                 <td rowSpan="2">
-                  <div class="col">
+                <div class="col">
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="subject"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Subject">
+                        Subject
+                      </option>
+                      {subject.map((i) => (
+                        <option value={i.subject_id}>{i.subject_name}</option>
+                      ))}
+                    </select>
                     <p>Finance Report Analysis</p>
                     <p>Code FIX10</p>
-                    <p>Mr KOY Sokun</p>
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="professor"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Professor">
+                        Professor
+                      </option>
+                      {professor.map((i) => (
+                        <option value={i.professor_id}>
+                          {i.first_name} {i.last_name}
+                        </option>
+                      ))}
+                    </select>
                     <p>Tel: 012548456</p>
-                    <p>Room: 104</p>
+
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="room"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Room">
+                        Room
+                      </option>
+                      {room.map((i) => (
+                        <option value={i.room_id}>{i.room_number}</option>
+                      ))}
+                    </select>
                   </div>
                 </td>
                 <td rowSpan="2">
-                  <div class="col">
+                <div class="col">
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="subject"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Subject">
+                        Subject
+                      </option>
+                      {subject.map((i) => (
+                        <option value={i.subject_id}>{i.subject_name}</option>
+                      ))}
+                    </select>
                     <p>Finance Report Analysis</p>
                     <p>Code FIX10</p>
-                    <p>Mr KOY Sokun</p>
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="professor"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Professor">
+                        Professor
+                      </option>
+                      {professor.map((i) => (
+                        <option value={i.professor_id}>
+                          {i.first_name} {i.last_name}
+                        </option>
+                      ))}
+                    </select>
                     <p>Tel: 012548456</p>
-                    <p>Room: 104</p>
+
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="room"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Room">
+                        Room
+                      </option>
+                      {room.map((i) => (
+                        <option value={i.room_id}>{i.room_number}</option>
+                      ))}
+                    </select>
                   </div>
                 </td>
                 <td rowSpan="2">
-                  <div class="col">
+                <div class="col">
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="subject"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Subject">
+                        Subject
+                      </option>
+                      {subject.map((i) => (
+                        <option value={i.subject_id}>{i.subject_name}</option>
+                      ))}
+                    </select>
                     <p>Finance Report Analysis</p>
                     <p>Code FIX10</p>
-                    <p>Mr KOY Sokun</p>
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="professor"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Professor">
+                        Professor
+                      </option>
+                      {professor.map((i) => (
+                        <option value={i.professor_id}>
+                          {i.first_name} {i.last_name}
+                        </option>
+                      ))}
+                    </select>
                     <p>Tel: 012548456</p>
-                    <p>Room: 104</p>
+
+                    <select
+                      className="select select-bordered w-3/4"
+                      name="room"
+                      onChange={() => {}}
+                    >
+                      <option selected disabled value=" Room">
+                        Room
+                      </option>
+                      {room.map((i) => (
+                        <option value={i.room_id}>{i.room_number}</option>
+                      ))}
+                    </select>
                   </div>
                 </td>
               </tr>
@@ -374,9 +524,9 @@ export default function ScheduleTemplete({ data, setInput }) {
         <center>
           <button
             className=" btn px-6 btn-sm normal-case btn-primary"
-            onClick={handlePrint}
+            onClick={handleSave}
           >
-            Print
+            Save
           </button>
         </center>
       ) : (
