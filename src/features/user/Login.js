@@ -1,74 +1,112 @@
-import {useState, useRef} from 'react'
-import {Link} from 'react-router-dom'
-import LandingIntro from './LandingIntro'
-import ErrorText from  '../../components/Typography/ErrorText'
-import InputText from '../../components/Input/InputText'
+import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import LandingIntro from "./LandingIntro";
+import ErrorText from "../../components/Typography/ErrorText";
+import InputText from "../../components/Input/InputText";
+import { Base_URL } from "../../../src/utils/globalConstantUtil";
+import Axios from "axios";
 
-function Login(){
+function Login() {
+  const INITIAL_LOGIN_OBJ = {
+    password: "",
+    username: "",
+  };
 
-    const INITIAL_LOGIN_OBJ = {
-        password : "",
-        emailId : ""
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loginObj, setLoginObj] = useState(INITIAL_LOGIN_OBJ);
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+    setErrorMessage("");
+
+    if (loginObj.username.trim() === "")
+      return setErrorMessage("Username is required!");
+    if (loginObj.password.trim() === "")
+      return setErrorMessage("Password is required!");
+    else {
+      try {
+        const res = await Axios.post(`${Base_URL}/api/login`, loginObj);
+        console.log(res.data);
+        //   setLoading(true);
+        //   localStorage.setItem("token", "DumyTokenHere");
+        //   setLoading(false);
+        //   window.location.href = "/app/dashboard";
+      } catch (error) {
+        console.log(error);
+      }
     }
+  };
 
-    const [loading, setLoading] = useState(false)
-    const [errorMessage, setErrorMessage] = useState("")
-    const [loginObj, setLoginObj] = useState(INITIAL_LOGIN_OBJ)
+  const updateFormValue = ({ updateType, value }) => {
+    setErrorMessage("");
+    setLoginObj({ ...loginObj, [updateType]: value });
+  };
 
-    const submitForm = (e) =>{
-        e.preventDefault()
-        setErrorMessage("")
-        
-        if(loginObj.emailId.trim() === "")return setErrorMessage("Email Id is required! (use any value)")
-        if(loginObj.password.trim() === "")return setErrorMessage("Password is required! (use any value)")
-        if(loginObj.emailId.trim() == "admin" && loginObj.password.trim() == "admin"){
-            setLoading(true)
-            // Call API to check user credentials and save token in localstorage
-            localStorage.setItem("token", "DumyTokenHere")
-            setLoading(false)
-            window.location.href = '/app/dashboard'
-        }else{
-            return  setErrorMessage("Email and Passowrd is not match")
-        }
-    }
+  return (
+    <div className="min-h-screen bg-base-200 flex items-center">
+      <div className="card mx-auto w-full max-w-5xl  shadow-xl">
+        <div className="grid  md:grid-cols-2 grid-cols-1  bg-base-100 rounded-xl">
+          <div className="">
+            <LandingIntro />
+          </div>
+          <div className="py-24 px-10">
+            <h2 className="text-4xl font-semibold mb-2 text-center text-blue-500">
+              Login
+            </h2>
+            <form onSubmit={(e) => submitForm(e)}>
+              <div className="mb-4">
+                <InputText
+                  type="username"
+                  defaultValue={loginObj.username}
+                  updateType="username"
+                  containerStyle="mt-4"
+                  labelTitle="Username"
+                  updateFormValue={updateFormValue}
+                />
 
-    const updateFormValue = ({updateType, value}) => {
-        setErrorMessage("")
-        setLoginObj({...loginObj, [updateType] : value})
-    }
+                <InputText
+                  defaultValue={loginObj.password}
+                  type="password"
+                  updateType="password"
+                  containerStyle="mt-4"
+                  labelTitle="Password"
+                  updateFormValue={updateFormValue}
+                />
+              </div>
 
-    return(
-        <div className="min-h-screen bg-base-200 flex items-center">
-            <div className="card mx-auto w-full max-w-5xl  shadow-xl">
-                <div className="grid  md:grid-cols-2 grid-cols-1  bg-base-100 rounded-xl">
-                <div className=''>
-                        <LandingIntro />
-                </div>
-                <div className='py-24 px-10'>
-                    <h2 className='text-4xl font-semibold mb-2 text-center text-blue-500'>Login</h2>
-                    <form onSubmit={(e) => submitForm(e)}>
+              <div className="text-right text-primary">
+                <Link to="/forgot-password">
+                  <span className="text-sm  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200 text-blue-500">
+                    Forgot Password?
+                  </span>
+                </Link>
+              </div>
 
-                        <div className="mb-4">
+              <ErrorText styleClass="mt-8">{errorMessage}</ErrorText>
+              <button
+                type="submit"
+                className={
+                  "btn mt-2 w-full btn-primary" + (loading ? " loading" : "")
+                }
+              >
+                Login
+              </button>
 
-                            <InputText type="emailId" defaultValue={loginObj.emailId} updateType="emailId" containerStyle="mt-4" labelTitle="Email Id" updateFormValue={updateFormValue}/>
-
-                            <InputText defaultValue={loginObj.password} type="password" updateType="password" containerStyle="mt-4" labelTitle="Password" updateFormValue={updateFormValue}/>
-
-                        </div>
-
-                        <div className='text-right text-primary'><Link to="/forgot-password"><span className="text-sm  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200 text-blue-500">Forgot Password?</span></Link>
-                        </div>
-
-                        <ErrorText styleClass="mt-8">{errorMessage}</ErrorText>
-                        <button type="submit" className={"btn mt-2 w-full btn-primary" + (loading ? " loading" : "")}>Login</button>
-
-                        <div className='text-center mt-4'>Don't have an account yet?<Link to="/register"><span className="inline-block hover:text-primary hover:underline hover:cursor-pointer transition duration-200 text-blue-500">Register</span></Link></div>
-                    </form>
-                </div>
-            </div>
-            </div>
+              <div className="text-center mt-4">
+                Don't have an account yet?
+                <Link to="/register">
+                  <span className="inline-block hover:text-primary hover:underline hover:cursor-pointer transition duration-200 text-blue-500">
+                    Register
+                  </span>
+                </Link>
+              </div>
+            </form>
+          </div>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
 
-export default Login
+export default Login;
