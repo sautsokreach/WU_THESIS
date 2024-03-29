@@ -16,7 +16,9 @@ const Professor_Schedule = lazy(() =>
 const Professor = lazy(() => import("../pages/protected/Professor"));
 const Subject = lazy(() => import("../pages/protected/Subject"));
 const Team = lazy(() => import("../pages/protected/Team"));
-const GenerateScedule = lazy(() => import("../pages/protected/GenerateSchedule"));
+const GenerateSchedule = lazy(() =>
+  import("../pages/protected/GenerateSchedule")
+);
 const Bills = lazy(() => import("../pages/protected/Bills"));
 const ProfileSettings = lazy(() =>
   import("../pages/protected/ProfileSettings")
@@ -47,8 +49,8 @@ const routes = [
     component: Professor,
   },
   {
-    path: "/generateScedule",
-    component: GenerateScedule,
+    path: "/generateSchedule",
+    component: GenerateSchedule,
   },
   {
     path: "/settings-profile",
