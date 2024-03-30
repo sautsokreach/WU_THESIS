@@ -1,4 +1,4 @@
-import React, { createContext, lazy, useEffect } from "react";
+import React, { lazy, useContext, useEffect } from "react";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -25,8 +25,6 @@ initializeApp();
 const token = checkAuth();
 
 function App() {
-  const { currentUser } = createContext(AuthContext);
-
   useEffect(() => {
     //console.log("hello");
     // 👆 daisy UI themes initialization
@@ -48,7 +46,7 @@ function App() {
           <Route
             path="*"
             element={
-              <Navigate to={true ? "/app/dashboard" : "/login"} replace />
+              <Navigate to={token ? "/app/dashboard" : "/login"} replace />
             }
           />
         </Routes>

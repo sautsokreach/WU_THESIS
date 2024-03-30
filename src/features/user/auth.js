@@ -13,6 +13,7 @@ const AuthContextProvider = ({ children }) => {
 
   const login = async (input) => {
     const res = await Axios.post(`${Base_URL}/api/login`, input);
+    console.log(res.data);
     setCurrentUser(res.data);
   };
   const logout = async () => {

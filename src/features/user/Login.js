@@ -28,8 +28,8 @@ function Login() {
     else {
       try {
         await login(loginObj);
-        // setLoading(true);
-        // setLoading(false);
+        setLoading(true);
+        setLoading(false);
         window.location.href = "/app/dashboard";
       } catch (error) {
         console.log(error);
