@@ -32,10 +32,8 @@ function Register() {
       try {
         //setLoading(true);
         await Axios.post(`${Base_URL}/api/register`, registerObj);
-        // Call API to check user credentials and save token in localstorage
-        //   localStorage.setItem("token", "DumyTokenHere");
-        // setLoading(false);
-        // window.location.href = "/app/welcome";
+        setLoading(false);
+        window.location.href = "/login";
       } catch (error) {
         console.log(error);
       }

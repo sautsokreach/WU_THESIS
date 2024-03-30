@@ -1,4 +1,4 @@
-import React, { lazy, useEffect } from "react";
+import React, { createContext, lazy, useEffect } from "react";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -9,6 +9,7 @@ import {
 import { themeChange } from "theme-change";
 import checkAuth from "./app/auth";
 import initializeApp from "./app/init";
+import { AuthContext } from "./features/user/auth";
 
 // Importing pages
 const Layout = lazy(() => import("./containers/Layout"));
@@ -24,6 +25,8 @@ initializeApp();
 const token = checkAuth();
 
 function App() {
+  const { currentUser } = createContext(AuthContext);
+
   useEffect(() => {
     //console.log("hello");
     // 👆 daisy UI themes initialization
@@ -45,7 +48,7 @@ function App() {
           <Route
             path="*"
             element={
-              <Navigate to={token ? "/app/dashboard" : "/login"} replace />
+              <Navigate to={true ? "/app/dashboard" : "/login"} replace />
             }
           />
         </Routes>

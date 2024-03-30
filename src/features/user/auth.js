@@ -1,5 +1,8 @@
 import { createContext, useEffect, useState } from "react";
+import { Base_URL } from "../../../src/utils/globalConstantUtil";
 import Axios from "axios";
+
+Axios.defaults.withCredentials = true;
 
 const AuthContext = createContext();
 
@@ -9,11 +12,11 @@ const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (input) => {
-    const res = await Axios.post("/api/auth/login", input);
+    const res = await Axios.post(`${Base_URL}/api/login`, input);
     setCurrentUser(res.data);
   };
   const logout = async () => {
-    await Axios.post("/api/auth/logout");
+    await Axios.post(`${Base_URL}}/api/auth/logout`);
     setCurrentUser(null);
   };
 

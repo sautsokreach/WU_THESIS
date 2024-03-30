@@ -1,10 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { Link } from "react-router-dom";
 import LandingIntro from "./LandingIntro";
 import ErrorText from "../../components/Typography/ErrorText";
 import InputText from "../../components/Input/InputText";
-import { Base_URL } from "../../../src/utils/globalConstantUtil";
-import Axios from "axios";
+import { AuthContext } from "./auth";
 
 function Login() {
   const INITIAL_LOGIN_OBJ = {
@@ -16,6 +15,8 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [loginObj, setLoginObj] = useState(INITIAL_LOGIN_OBJ);
 
+  const { login } = useContext(AuthContext);
+
   const submitForm = async (e) => {
     e.preventDefault();
     setErrorMessage("");
@@ -26,12 +27,10 @@ function Login() {
       return setErrorMessage("Password is required!");
     else {
       try {
-        const res = await Axios.post(`${Base_URL}/api/login`, loginObj);
-        console.log(res.data);
-        //   setLoading(true);
-        //   localStorage.setItem("token", "DumyTokenHere");
-        //   setLoading(false);
-        //   window.location.href = "/app/dashboard";
+        await login(loginObj);
+        // setLoading(true);
+        // setLoading(false);
+        window.location.href = "/app/dashboard";
       } catch (error) {
         console.log(error);
       }
