@@ -1,14 +1,20 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TitleCard from "../../../components/Cards/TitleCard";
 import { showNotification } from "../../common/headerSlice";
 import InputText from "../../../components/Input/InputText";
 import TextAreaInput from "../../../components/Input/TextAreaInput";
 import ToogleInput from "../../../components/Input/ToogleInput";
+// import { Base_URL } from "../../../src/utils/globalConstantUtil";
+import Axios from "axios";
+import { AuthContext } from "../../user/auth";
 
 function ProfileSettings() {
   const dispatch = useDispatch();
+  const [user, setUser] = useState({});
+  const { currentUser } = useContext(AuthContext);
+  console.log(currentUser.user_id);
 
   // Call API to update profile settings changes
   const updateProfile = () => {
@@ -17,6 +23,7 @@ function ProfileSettings() {
 
   const updateFormValue = ({ updateType, value }) => {
     console.log(updateType);
+    console.log(value);
   };
 
   return (
@@ -25,27 +32,27 @@ function ProfileSettings() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <InputText
             labelTitle="Name"
-            defaultValue="Alex"
+            defaultValue={currentUser?.username}
             updateFormValue={updateFormValue}
           />
           <InputText
             labelTitle="Email Id"
-            defaultValue="alex@dashwind.com"
+            defaultValue={currentUser?.email}
             updateFormValue={updateFormValue}
           />
           <InputText
             labelTitle="Title"
-            defaultValue="UI/UX Designer"
+            defaultValue={currentUser?.title}
             updateFormValue={updateFormValue}
           />
           <InputText
             labelTitle="Place"
-            defaultValue="California"
+            defaultValue={currentUser?.place}
             updateFormValue={updateFormValue}
           />
           <TextAreaInput
             labelTitle="About"
-            defaultValue="Doing what I love, part time traveller"
+            defaultValue={currentUser?.about}
             updateFormValue={updateFormValue}
           />
         </div>

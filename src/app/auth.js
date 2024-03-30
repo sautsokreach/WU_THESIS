@@ -3,11 +3,12 @@ import { AuthContext } from "../features/user/auth";
 import { Token } from "@mui/icons-material";
 import { useContext } from "react";
 
-const checkAuth = () => {
+const CheckAuth = (currentUser) => {
   /*  Getting token value stored in localstorage, if token is not present we will open login page 
     for all internal dashboard routes  */
   const TOKEN = localStorage.getItem("user");
-  console.log(TOKEN);
+
+  // console.log(TOKEN);
   const PUBLIC_ROUTES = [
     "login",
     "forgot-password",
@@ -26,4 +27,4 @@ const checkAuth = () => {
   }
 };
 
-export default checkAuth;
+export default CheckAuth;

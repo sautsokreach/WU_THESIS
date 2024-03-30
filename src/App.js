@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { themeChange } from "theme-change";
-import checkAuth from "./app/auth";
+import CheckAuth from "./app/auth";
 import initializeApp from "./app/init";
 import { AuthContext } from "./features/user/auth";
 
@@ -20,9 +20,9 @@ const Documentation = lazy(() => import("./pages/Documentation"));
 
 // Initializing different libraries
 initializeApp();
+const token = CheckAuth();
 
 // Check for login and initialize axios
-const token = checkAuth();
 
 function App() {
   useEffect(() => {

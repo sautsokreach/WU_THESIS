@@ -13,12 +13,18 @@ const AuthContextProvider = ({ children }) => {
 
   const login = async (input) => {
     const res = await Axios.post(`${Base_URL}/api/login`, input);
-    console.log(res.data);
+    //console.log(res.data);
     setCurrentUser(res.data);
   };
+
   const logout = async () => {
-    await Axios.post(`${Base_URL}}/api/auth/logout`);
-    setCurrentUser(null);
+    console.log("logout");
+    try {
+      await Axios.post(`${Base_URL}/api/logout`);
+      // setCurrentUser(null);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
