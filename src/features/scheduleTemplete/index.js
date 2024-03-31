@@ -89,13 +89,27 @@ export default function ScheduleTemplete({ data }) {
     const getSubject = subject.find(
       (item) => item.subject_id === parseInt(value)
     );
-    console.log(getSubject);
-    console.log(name);
+    // console.log(getSubject);
+    // console.log(name);
     setSubjectCode({ ...subjectCode, [name]: getSubject.subject_code });
 
-    const subjectDay = {subject1:'monday',subject2:'tuesday',subject3:'wednesday',subject4:'thurday',subject5:'friday',subject6:'saturday',subject7:'sunday'}
+    const subjectDay = {
+      subject1: "monday",
+      subject2: "tuesday",
+      subject3: "wednesday",
+      subject4: "thurday",
+      subject5: "friday",
+      subject6: "saturday",
+      subject7: "sunday",
+    };
 
-    axios.post(`${Base_URL}/api/getAvailableProfessor`,{...data,subject_id: getSubject.subject_id,weekDay:subjectDay[name]}).then((res) => {
+    axios
+      .post(`${Base_URL}/api/getAvailableProfessor`, {
+        ...data,
+        subject_id: getSubject.subject_id,
+        weekDay: subjectDay[name],
+      })
+      .then((res) => {
         setProfessor(res.data);
       });
   };
