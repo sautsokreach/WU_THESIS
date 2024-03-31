@@ -24,6 +24,7 @@ function ProfileSettings() {
   const updateFormValue = ({ updateType, value }) => {
     console.log(updateType);
     console.log(value);
+    console.log({...currentUser,[updateType]:value});
   };
 
   return (
@@ -34,6 +35,7 @@ function ProfileSettings() {
             labelTitle="Name"
             defaultValue={currentUser?.username}
             updateFormValue={updateFormValue}
+            updateType="username"
           />
           <InputText
             labelTitle="Email Id"
