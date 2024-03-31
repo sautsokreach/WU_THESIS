@@ -35,6 +35,11 @@ export default function ScheduleTemplete({ data }) {
   const [room, setRoom] = useState([]);
   const [subject, setSubject] = useState([]);
   const [professorSchedule, setProfessorSchedule] = useState([]);
+  const [availableRoom, setAvailableRoom] = useState({
+    // day: "",
+    // shift: "",
+    // date: "",
+  });
   const [input, setInput] = useState(data);
   const [subjectCode, setSubjectCode] = useState({});
 
@@ -57,9 +62,9 @@ export default function ScheduleTemplete({ data }) {
       setProfessorSchedule(res.data);
     });
 
-    axios.get(`${Base_URL}/api/rooms`).then((res) => {
-      setRoom(res.data);
-    });
+    // axios.get(`${Base_URL}/api/rooms`).then((res) => {
+    //   setRoom(res.data);
+    // });
 
     axios.get(`${Base_URL}/api/subjects`).then((res) => {
       setSubject(res.data);
@@ -84,20 +89,64 @@ export default function ScheduleTemplete({ data }) {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Adding 1 to month since it's zero-indexed
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  const handleRoomAvailable = (weekday) => {
+   
+  };
+
   const handleSubjectCode = (e) => {
     const { value, name } = e.target;
     const getSubject = subject.find(
       (item) => item.subject_id === parseInt(value)
     );
-    console.log(getSubject);
-    console.log(name);
+    // console.log(getSubject);
+    // console.log(name);
     setSubjectCode({ ...subjectCode, [name]: getSubject.subject_code });
 
-    const subjectDay = {subject1:'monday',subject2:'tuesday',subject3:'wednesday',subject4:'thurday',subject5:'friday',subject6:'saturday',subject7:'sunday'}
+    const subjectDay = {
+      subject1: "monday",
+      subject2: "tuesday",
+      subject3: "wednesday",
+      subject4: "thursday",
+      subject5: "friday",
+      subject6: "saturday",
+      subject7: "sunday",
+    };
 
-    axios.post(`${Base_URL}/api/getAvailableProfessor`,{...data,subject_id: getSubject.subject_id,weekDay:subjectDay[name]}).then((res) => {
+    axios
+      .post(`${Base_URL}/api/getAvailableProfessor`, {
+        ...data,
+        subject_id: getSubject.subject_id,
+        weekDay: subjectDay[name],
+      })
+      .then((res) => {
         setProfessor(res.data);
       });
+
+      const day = subjectDay[name];
+      const shift = data.shift;
+      const date = formatDate(data.startTermLabel);
+      setAvailableRoom({
+        day: day,
+        shift: shift,
+        date: date,
+      });
+  
+      console.log(availableRoom);
+  
+      axios
+        .post(`${Base_URL}/api/getAvailableRoom`, availableRoom)
+        .then((res) => {
+          // console.log(res.data);
+          // setRoom(res.data);
+        });
   };
 
   return (
@@ -300,14 +349,16 @@ export default function ScheduleTemplete({ data }) {
                     <select
                       className="select select-bordered w-3/4"
                       name="room"
-                      onChange={() => {}}
+                      onClick={() => {
+                        handleRoomAvailable("tuesday");
+                      }}
                     >
                       <option selected disabled value=" Room">
                         Room
                       </option>
-                      {room.map((i) => (
+                      {/* {room.map((i) => (
                         <option value={i.room_id}>{i.room_number}</option>
-                      ))}
+                      ))} */}
                     </select>
                   </div>
                 </td>
@@ -350,9 +401,9 @@ export default function ScheduleTemplete({ data }) {
                       <option selected disabled value=" Room">
                         Room
                       </option>
-                      {room.map((i) => (
+                      {/* {room.map((i) => (
                         <option value={i.room_id}>{i.room_number}</option>
-                      ))}
+                      ))} */}
                     </select>
                   </div>
                 </td>
