@@ -75,8 +75,10 @@ export default function ScheduleTemplete({ data }) {
 
     handleShift();
   }, [data]);
+
   const elementToPrintRef = useRef(null);
-  const handleSave = () => {
+
+  const handleSave = async () => {
     //console.log(input);
     // const elementToPrint = elementToPrintRef.current;
     // console.error(elementToPrint);
@@ -88,6 +90,24 @@ export default function ScheduleTemplete({ data }) {
     // } else {
     //   console.error("Element to print not found.");
     // }
+    const finalHeader = {
+      university_id: data?.university,
+      batch: data?.batch,
+      semester: data?.semester,
+      year: data?.year,
+      term_start: data?.startTerm,
+      term_end: data?.endTerm,
+      department_id: data?.major,
+      degree: data?.department,
+      shift: data?.shift,
+      academic: data?.academic,
+    };
+    try {
+      await axios.post(`${Base_URL}/api/schedule`, finalHeader);
+      console.log(finalHeader);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onChangeInput = (e) => {
@@ -296,7 +316,7 @@ export default function ScheduleTemplete({ data }) {
                 BATCH {data.batch}
               </h2>
               <p>
-                <b>{data.major_set} Degree</b>
+                <b>{data.department_label} Degree</b>
               </p>
               <p>{data.major_label}</p>
               <p>

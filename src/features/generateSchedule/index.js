@@ -6,15 +6,17 @@ import axios from "axios";
 import { Base_URL } from "../../../src/utils/globalConstantUtil";
 import Datepicker from "react-tailwindcss-datepicker";
 
-function getListDepartment(setRows) {
-  axios.get(`${Base_URL}/api/departments`).then((res) => {
-    setRows(res.data);
-  });
-}
-
-function getListDepartmentDegree(setRows) {
+function getList(setRows, setRows2, setRows3) {
   axios.get(`${Base_URL}/api/departmentsDegree`).then((res) => {
     setRows(res.data);
+  });
+
+  axios.get(`${Base_URL}/api/departments`).then((res) => {
+    setRows2(res.data);
+  });
+
+  axios.get(`${Base_URL}/api/universities`).then((res) => {
+    setRows3(res.data);
   });
 }
 
@@ -22,7 +24,7 @@ function GenerateSchedule() {
   const [data, setData] = useState(null);
   const [department, setDepartment] = useState([]);
   const [departmentsDegree, setDepartmentDegree] = useState([]);
-  const [getDegree, setGetDegree] = useState([]);
+  const [university, setUniversity] = useState([]);
   const [input, setInput] = useState({
     year: "1",
     year_label: "I",
@@ -33,8 +35,11 @@ function GenerateSchedule() {
     endTerm: new Date(),
   });
 
+  console.log(input);
+
   console.log(departmentsDegree);
-  console.log(department);
+  console.log(university);
+
   const currentYear = new Date().getFullYear();
   const years = Array.from(
     new Array(21),
@@ -70,9 +75,9 @@ function GenerateSchedule() {
   };
 
   useEffect(() => {
-    getListDepartment(setDepartment);
-    getListDepartmentDegree(setDepartmentDegree);
+    getList(setDepartmentDegree, setDepartment, setUniversity);
   }, []);
+
   const onChangeInput = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -107,15 +112,29 @@ function GenerateSchedule() {
         <div className="grid grid-cols-3 gap-y-5">
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Description</span>
+              <span className="label-text">University</span>
             </div>
-            <input
+            {/* <input
               onChange={onChangeInput}
-              name="description"
+              name="university"
               type="text"
-              placeholder="Input Description"
+              placeholder="University"
               className="input input-bordered w-full max-w-xs"
-            />
+            /> */}
+            <select
+              className="select select-bordered"
+              name="university"
+              onChange={onChangeDropdown}
+            >
+              <option selected disabled value="Please Select University">
+                Please Select University
+              </option>
+              {university.map((i, index) => (
+                <option key={index} value={i.university_id}>
+                  {i.location}
+                </option>
+              ))}
+            </select>
           </label>
 
           <label className="form-control w-full max-w-xs">
@@ -191,14 +210,10 @@ function GenerateSchedule() {
               name="department"
               onChange={onChangeDropdownDataSet}
             >
-              <option selected disabled value="Please Select Faculty">
-                Please Select Faculty
-              </option>
-              {department.map((i) => (
-                <option data-set={i.department_name} value={i.department_id}>
-                  {i.department_name}
-                </option>
-              ))}
+              <option value="bachelor">Bachelor</option>
+              <option value="associate">Associate</option>
+              <option value="master">Master</option>
+              <option value="phd">PhD</option>
             </select>
           </label>
           <label className="form-control w-full max-w-xs">
@@ -244,15 +259,11 @@ function GenerateSchedule() {
               <option selected disabled value="Please Select Major">
                 Please Select Major
               </option>
-              <option data-set="bachelor" value="1">
-                Computer Science
-              </option>
-              <option data-set="bachelor" value="3">
-                Computer Engineering
-              </option>
-              <option data-set="bachelor" value="4">
-                Computer Design
-              </option>
+              {department.map((i) => (
+                <option data-set={i.department_name} value={i.department_id}>
+                  {i.department_name}
+                </option>
+              ))}
             </select>
           </label>
         </div>
