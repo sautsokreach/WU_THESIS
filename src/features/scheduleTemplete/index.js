@@ -34,6 +34,7 @@ export default function ScheduleTemplete({ data }) {
   const [professor, setProfessor] = useState([]);
   const [room, setRoom] = useState([]);
   const [subject, setSubject] = useState([]);
+  const [shift, setShift] = useState({});
   const [professorSchedule, setProfessorSchedule] = useState([]);
   const [availableRoom, setAvailableRoom] = useState({
     // day: "",
@@ -42,6 +43,8 @@ export default function ScheduleTemplete({ data }) {
   });
   const [input, setInput] = useState(data);
   const [subjectCode, setSubjectCode] = useState({});
+
+  console.log(data);
 
   const currentDate = new Date(); // C
   // Define options for formatting the date
@@ -69,6 +72,8 @@ export default function ScheduleTemplete({ data }) {
     axios.get(`${Base_URL}/api/subjects`).then((res) => {
       setSubject(res.data);
     });
+
+    handleShift();
   }, [data]);
   const elementToPrintRef = useRef(null);
   const handleSave = () => {
@@ -89,32 +94,19 @@ export default function ScheduleTemplete({ data }) {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Adding 1 to month since it's zero-indexed
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-
   const handleRoomAvailable = (weekday) => {
     const day = weekday;
     const shift = data.shift;
-    const date = formatDate(data.startTermLabel);
-    console.log(date);
-    setAvailableRoom({
-      day: day,
-      shift: shift,
-      date: date,
-    });
+    const date = data.startTerm;
+    const availableRoom = { day: day, shift: shift, date: date };
 
     console.log(availableRoom);
 
     axios
       .post(`${Base_URL}/api/getAvailableRoom`, availableRoom)
       .then((res) => {
-        // console.log(res.data);
-        // setRoom(res.data);
+        console.log(res.data);
+        setRoom(res.data);
       });
   };
 
@@ -147,6 +139,16 @@ export default function ScheduleTemplete({ data }) {
         setProfessor(res.data);
       });
   };
+
+  function handleShift() {
+    if (data?.shift === "morning") {
+      setShift({ shift1: "8:00 to 9:30", shift2: "9:35 to 11:00" });
+    } else if (data?.shift === "afternoon") {
+      setShift({ shift1: "2:00 to 3:30", shift2: "3:35 to 5:00" });
+    } else if (data?.shift === "evening") {
+      setShift({ shift1: "5:30 to 7:30", shift2: "7:35 to 8:30" });
+    }
+  }
 
   return (
     <div>
@@ -312,7 +314,7 @@ export default function ScheduleTemplete({ data }) {
                 <th>Friday</th>
               </tr>
               <tr>
-                <td>8:00 to 9:30</td>
+                <td>{shift.shift1}</td>
                 <td rowSpan="2">
                   <div className="col">
                     <select
@@ -349,15 +351,15 @@ export default function ScheduleTemplete({ data }) {
                       className="select select-bordered w-3/4"
                       name="room"
                       onClick={() => {
-                        handleRoomAvailable("tuesday");
+                        handleRoomAvailable("monday");
                       }}
                     >
                       <option selected disabled value=" Room">
                         Room
                       </option>
-                      {/* {room.map((i) => (
+                      {room.map((i) => (
                         <option value={i.room_id}>{i.room_number}</option>
-                      ))} */}
+                      ))}
                     </select>
                   </div>
                 </td>
@@ -395,14 +397,16 @@ export default function ScheduleTemplete({ data }) {
                     <select
                       className="select select-bordered w-3/4"
                       name="room"
-                      onChange={() => {}}
+                      onClick={() => {
+                        handleRoomAvailable("tuesday");
+                      }}
                     >
                       <option selected disabled value=" Room">
                         Room
                       </option>
-                      {/* {room.map((i) => (
+                      {room.map((i) => (
                         <option value={i.room_id}>{i.room_number}</option>
-                      ))} */}
+                      ))}
                     </select>
                   </div>
                 </td>
@@ -440,7 +444,9 @@ export default function ScheduleTemplete({ data }) {
                     <select
                       className="select select-bordered w-3/4"
                       name="room"
-                      onChange={() => {}}
+                      onClick={() => {
+                        handleRoomAvailable("wednesday");
+                      }}
                     >
                       <option selected disabled value=" Room">
                         Room
@@ -485,7 +491,9 @@ export default function ScheduleTemplete({ data }) {
                     <select
                       className="select select-bordered w-3/4"
                       name="room"
-                      onChange={() => {}}
+                      onClick={() => {
+                        handleRoomAvailable("thursday");
+                      }}
                     >
                       <option selected disabled value=" Room">
                         Room
@@ -530,7 +538,9 @@ export default function ScheduleTemplete({ data }) {
                     <select
                       className="select select-bordered w-3/4"
                       name="room"
-                      onChange={() => {}}
+                      onClick={() => {
+                        handleRoomAvailable("friday");
+                      }}
                     >
                       <option selected disabled value=" Room">
                         Room
@@ -543,7 +553,7 @@ export default function ScheduleTemplete({ data }) {
                 </td>
               </tr>
               <tr>
-                <td>9:35 to 11:00</td>
+                <td>{shift.shift2}</td>
               </tr>
             </table>
             <div class="footer">
@@ -563,24 +573,44 @@ export default function ScheduleTemplete({ data }) {
               <div class="signature">
                 <div class="signatureButton">
                   <p>Seen and Approved by</p>
-                  <input
-                    onChange={onChangeInput}
-                    name="approver"
-                    type="text"
-                    placeholder="Input Approver"
-                    className="input input-bordered w-full max-w-xs"
-                  />
+                  <select
+                    className="select none-bordered w-10/4"
+                    name="room"
+                    onClick={() => {}}
+                  >
+                    <option selected disabled value=" Input Preparer">
+                      Input Preparer
+                    </option>
+                    {professor.map(
+                      (i) =>
+                        i.degree === "PhD" && (
+                          <option value={i.id}>
+                            {i.first_name} {i.last_name}
+                          </option>
+                        )
+                    )}
+                  </select>
                 </div>
 
                 <div class="signatureButton">
                   <p>Prepared by</p>
-                  <input
-                    onChange={onChangeInput}
-                    name="preparer"
-                    type="text"
-                    placeholder="Input Preparer"
-                    className="input input-bordered w-full max-w-xs"
-                  />
+                  <select
+                    className="select none-bordered w-10/4"
+                    name="room"
+                    onClick={() => {}}
+                  >
+                    <option selected disabled value=" Input Preparer">
+                      Input Preparer
+                    </option>
+                    {professor.map(
+                      (i) =>
+                        i.degree === "PhD" && (
+                          <option value={i.id}>
+                            {i.first_name} {i.last_name}
+                          </option>
+                        )
+                    )}
+                  </select>
                 </div>
               </div>
             </div>

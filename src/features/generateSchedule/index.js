@@ -12,9 +12,17 @@ function getListDepartment(setRows) {
   });
 }
 
+function getListDepartmentDegree(setRows) {
+  axios.get(`${Base_URL}/api/departmentsDegree`).then((res) => {
+    setRows(res.data);
+  });
+}
+
 function GenerateSchedule() {
   const [data, setData] = useState(null);
   const [department, setDepartment] = useState([]);
+  const [departmentsDegree, setDepartmentDegree] = useState([]);
+  const [getDegree, setGetDegree] = useState([]);
   const [input, setInput] = useState({
     year: "1",
     year_label: "I",
@@ -24,6 +32,9 @@ function GenerateSchedule() {
     startTerm: new Date(),
     endTerm: new Date(),
   });
+
+  console.log(departmentsDegree);
+  console.log(department);
   const currentYear = new Date().getFullYear();
   const years = Array.from(
     new Array(21),
@@ -60,6 +71,7 @@ function GenerateSchedule() {
 
   useEffect(() => {
     getListDepartment(setDepartment);
+    getListDepartmentDegree(setDepartmentDegree);
   }, []);
   const onChangeInput = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -82,6 +94,12 @@ function GenerateSchedule() {
       [e.target.name + "_set"]: set,
     });
   };
+
+  // const handleMajor = () => {
+  //   departmentsDegree.map((i) => {
+  //     i.department_d === i;
+  //   });
+  // };
 
   return (
     <>
