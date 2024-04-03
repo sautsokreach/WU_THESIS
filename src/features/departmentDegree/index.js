@@ -27,7 +27,7 @@ import {
 function getListRoom(setRows) {
   axios.get(`${Base_URL}/api/departmentsDegree`).then((res) => {
     setRows(
-      res.data.map((item) => ({ ...item, id: item.department_degree_id }))
+      res.data.map((item) => ({ ...item, id: item.major_id }))
     );
   });
 }
@@ -125,8 +125,14 @@ export default function University() {
   };
   const columns = [
     {
+      field: "major_name",
+      headerName: "Major",
+      width: 180,
+      editable: true,
+    },
+    {
       field: "department_id",
-      headerName: "Department Name",
+      headerName: "Faculty",
       width: 180,
       editable: true,
       type: "singleSelect",
@@ -141,12 +147,6 @@ export default function University() {
       editable: true,
       type: "singleSelect",
       valueOptions: ["bachelor", "associate", "master", "PhD"],
-    },
-    {
-      field: "major",
-      headerName: "Degree Name",
-      width: 180,
-      editable: true,
     },
     {
       field: "actions",
@@ -196,7 +196,7 @@ export default function University() {
     },
   ];
   return (
-    <TitleCard title="Degree" topMargin="mt-2">
+    <TitleCard title="Major" topMargin="mt-2">
       <Box
         sx={{
           height: 500,

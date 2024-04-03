@@ -33,7 +33,11 @@ function GenerateSchedule() {
     shift_label: "Morning",
     startTerm: new Date(),
     endTerm: new Date(),
+    startTermLabel: new Date().toLocaleDateString("en-US", {year: "numeric",month: "long",day: "numeric"}),
+    endTermLabel: new Date().toLocaleDateString("en-US", {year: "numeric",month: "long",day: "numeric"}),
   });
+  const workday = ['monday','tuesday','wednesday','thursday','friday']
+  const weekend = ['saturday','sunday']
 
   console.log(input);
 
@@ -210,10 +214,11 @@ function GenerateSchedule() {
               name="department"
               onChange={onChangeDropdownDataSet}
             >
-              <option value="bachelor">Bachelor</option>
-              <option value="associate">Associate</option>
-              <option value="master">Master</option>
-              <option value="phd">PhD</option>
+              {department.map((i) => (
+                <option data-set={i.department_name} value={i.department_id}>
+                  {i.department_name}  {i.degree}
+                </option>
+              ))}
             </select>
           </label>
           <label className="form-control w-full max-w-xs">
@@ -259,9 +264,9 @@ function GenerateSchedule() {
               <option selected disabled value="Please Select Major">
                 Please Select Major
               </option>
-              {department.map((i) => (
-                <option data-set={i.department_name} value={i.department_id}>
-                  {i.department_name}
+              {departmentsDegree.map((i) => (
+                <option data-set={i.degree} value={i.major_id}>
+                  {i.major_name}
                 </option>
               ))}
             </select>
@@ -279,7 +284,11 @@ function GenerateSchedule() {
         </div>
       </TitleCard>
       <br></br>
+      {data != null ?
       <ScheduleTemplete data={data} setInput={setInput} />
+      : (
+        ""
+      )}
     </>
   );
 }

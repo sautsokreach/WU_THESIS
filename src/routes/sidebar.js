@@ -147,7 +147,7 @@ const routes = [
         />
       </svg>
     ), // icon component
-    name: "Faculties and Degree", // name that appear in Sidebar
+    name: "Faculties and Major", // name that appear in Sidebar
   },
   {
     path: "/app/room", // url

@@ -52,7 +52,7 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
     day: "numeric",
   };
   const workday = ['monday','tuesday','wednesday','thursday','friday']
-  const weekday = ['saturday','sunday']
+  const weekend = ['saturday','sunday']
 
 
   // Format the date using the specified options
