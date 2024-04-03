@@ -40,6 +40,8 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
     // shift: "",
     // date: "",
   });
+  
+  const [shift, setShift] = useState({});
   const [input, setInput] = useState(data);
   const [subjectCode, setSubjectCode] = useState({});
   const [scheduleDay, setScheduleDay] = useState([]);
@@ -53,15 +55,24 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
   };
   const workday = ['monday','tuesday','wednesday','thursday','friday']
   const weekend = ['saturday','sunday']
+  function handleShift() {
+    if (data?.shift === "morning") {
+      setShift({ shift1: "8:00 to 9:30", shift2: "9:35 to 11:00" });
+    } else if (data?.shift === "afternoon") {
+      setShift({ shift1: "2:00 to 3:30", shift2: "3:35 to 5:00" });
+    } else if (data?.shift === "evening") {
+      setShift({ shift1: "5:30 to 7:30", shift2: "7:35 to 8:30" });
+    }
+  }
 
 
   // Format the date using the specified options
   const currentLabel = currentDate.toLocaleDateString("en-US", options);
   useEffect(() => {
-    console.log(data)
     if(data)
       axios.get(`${Base_URL}/api/ScheduleDays/${data.schedule_id}`).then((res) => {
         setScheduleDay(res.data);
+        handleShift()
     });
     // axios.get(`${Base_URL}/api/professors`).then((res) => {
     //   setProfessor(res.data);
@@ -208,7 +219,7 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
                 margin-bottom: 10px;
               }
               
-              .title h2 {
+              .title h5 {
                 margin: 5px;
               }
               
@@ -269,7 +280,7 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
               }
               
               .signatureButton > p:first-child {
-                padding-bottom: 50px;
+                padding-bottom: 10px;
               }
               
           `}{" "}
@@ -294,21 +305,21 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
                 alt="Logo"
               />
               <div className="description">
-                <h3>{data.department_name} </h3>
+                <h3>Faculty of {data.department_name} </h3>
               </div>
             </div>
 
-            <div className="title">
-              <h2>
+            <div className="title" >
+              <h5>
                 SCHEDULE OF YEAR {data.year} - SEMESTER {data.semester} -
                 BATCH {data.batch}
-              </h2>
-              <p>
-                <b>{data.degree} Degree</b>
+              </h5>
+              <p style={{lineHeight:"0.9"}}>
+                {data.degree} Degree
               </p>
-              <p>{data.major}</p>
-              <p>
-                <b>Shift: {data.shift}</b>
+              <p style={{lineHeight:"0.9"}}>{data.major_name}</p>
+              <p style={{lineHeight:"0.9"}}>
+                Shift: {data.shift}
               </p>
             </div>
 
@@ -322,7 +333,7 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
                 <th>Friday</th>
               </tr>
               <tr>
-                <td>8:00 to 9:30</td>
+                <td>{shift.shift1}</td>
                 {
                   workday.map((value,index)=> 
                   scheduleDay.filter((e)=> e.weekday == value ).length > 0 ?  (<td rowSpan="2">
@@ -383,7 +394,7 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
                 }
               </tr>
               <tr>
-                <td>9:35 to 11:00</td>
+                <td>{shift.shift2}</td>
               </tr>
             </table>
             <div class="footer">

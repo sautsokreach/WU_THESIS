@@ -76,27 +76,6 @@ const initialRows = [
 ];
 
 
-function EditToolbar(props) {
-    const { setRows, setRowModesModel } = props;
-
-    const handleClick = () => {
-        const id = randomId();
-        setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        }));
-    };
-
-    return (
-
-        <GridToolbarContainer>
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-                Add record
-            </Button>
-        </GridToolbarContainer>
-    );
-}
 
 export default function FullFeaturedCrudGrid() {
 
@@ -124,7 +103,11 @@ export default function FullFeaturedCrudGrid() {
     };
 
     const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+        axios.delete(`${Base_URL}/api/deleteSchedule/${id}`)
+        .then(res => {
+            getListSchedule(setRows)
+         })
+         setRows(rows.filter((row) => row.id !== id));
     };
 
     const handleCancelClick = (id) => () => {
@@ -140,7 +123,12 @@ export default function FullFeaturedCrudGrid() {
     };
 
     const processRowUpdate = (newRow) => {
+            axios.put(`${Base_URL}/api/editSchedule/${newRow.id}`,newRow)
+                .then(res => {
+                    getListSchedule(setRows)
+            })
         const updatedRow = { ...newRow, isNew: false };
+
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
         return updatedRow;
     };
@@ -156,15 +144,6 @@ export default function FullFeaturedCrudGrid() {
         editable: true,
         type: 'date',
         valueGetter: (value) =>  value && new Date(value.row.create_date)
-        },
-        {
-            field: 'descripton',
-            headerName: 'Descripton',
-            width: 200,
-            align: 'left',
-            headerAlign: 'left',
-            editable: true,
-
         },
         {
             field: 'year',
@@ -198,7 +177,7 @@ export default function FullFeaturedCrudGrid() {
             width: 220,
             type: 'date',
             editable: true,
-            valueGetter: (value) => value && new Date(value.row.term_end)
+            valueGetter: (value) => value && new Date(value.row.term_start)
         },
         {
             field: 'term_end',
@@ -207,6 +186,15 @@ export default function FullFeaturedCrudGrid() {
             type: 'date',
             editable: true,
             valueGetter: (value) =>  value && new Date(value.row.term_end)
+        },
+        {
+            field: 'description',
+            headerName: 'Description',
+            width: 200,
+            align: 'left',
+            headerAlign: 'left',
+            editable: true,
+
         },
         {
             field: 'actions',
@@ -279,9 +267,6 @@ export default function FullFeaturedCrudGrid() {
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
                     onRowClick={(e)=>{setData(e.row)}}
-                    slots={{
-                        toolbar: EditToolbar,
-                    }}
                     slotProps={{
                         toolbar: { setRows, setRowModesModel },
                     }}

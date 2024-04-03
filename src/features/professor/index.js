@@ -96,8 +96,6 @@ export default function Professor() {
     };
 
     const processRowUpdate = (newRow) => {
-        console.log(isNaN(newRow.id))
-        console.log(newRow.id)
         if( isNaN(newRow.id)){
             axios.post(`${Base_URL}/api/createProfessor`,newRow)
             .then(res => {
@@ -133,6 +131,7 @@ export default function Professor() {
                 { code: 'PhD', name: 'PhD' }
             ]
         },
+        { field: 'note', headerName: 'Note', width: 180, editable: true },
         {
             field: 'actions',
             type: 'actions',

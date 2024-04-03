@@ -33,7 +33,7 @@ function getListUniversity(setRows) {
 
 export default function ScheduleTemplete({ data }) {
   const [professor, setProfessor] = useState({});
-  const [allProfessor, setAllProfessor] = useState([]);
+  const [approverPreparer, setApproverPreparer] = useState([]);
   const [room, setRoom] = useState([]);
   const [subject, setSubject] = useState([]);
   const [shift, setShift] = useState({});
@@ -67,9 +67,9 @@ export default function ScheduleTemplete({ data }) {
   const currentLabel = currentDate.toLocaleDateString("en-US", options);
   useEffect(() => {
     setInput(data)
-    axios.get(`${Base_URL}/api/professors`).then((res) => {
+    axios.get(`${Base_URL}/api/getApproverPreparer`).then((res) => {
       //setProfessor(res.data);
-      setAllProfessor(res.data);
+      setApproverPreparer(res.data);
     });
 
     axios.get(`${Base_URL}/api/professorSchedule`).then((res) => {
@@ -93,39 +93,16 @@ export default function ScheduleTemplete({ data }) {
 
   const elementToPrintRef = useRef(null);
 
-  const handleSave = async () => {
-    //console.log(input);
-    // const elementToPrint = elementToPrintRef.current;
-    // console.error(elementToPrint);
-    // if (elementToPrint) {
-    //   const printWindow = window.open();
-    //   printWindow.document.write(elementToPrint.innerHTML);
-    //   printWindow.document.close();
-    //   setTimeout(() => printWindow.print(), 200); // Trigger the print dialog
-    // } else {
-    //   console.error("Element to print not found.");
-    // }
-    // const finalHeader = {
-    //   university_id: data?.university,
-    //   batch: data?.batch,
-    //   semester: data?.semester,
-    //   year: data?.year,
-    //   term_start: data?.startTerm,
-    //   term_end: data?.endTerm,
-    //   department_id: data?.department,
-    //   degree:data?.major_set,
-    //   shift: data?.shift,
-    //   academic: data?.academic,
-    //   approver: data?.approver,
-    //   preparer: data?.preparer,
-    //   major_id: data?.major,
-    // };
-    try {
-      await axios.post(`${Base_URL}/api/schedule`, input);
+  const handleSave = () => {
+     axios.post(`${Base_URL}/api/schedule`, input).then((res) => {
+      console.log(res.data);
+      for (let key in weekSchedule) {
+        // Check if the property belongs to the object itself and not inherited
+        const value = weekSchedule[key]
+          axios.post(`${Base_URL}/api/createScheduleDay`, {schedule_id:res.data.schedule_id,room_id:value.room_id,subject_id:value.subject_id,professor_id:value.professor_id,weekDay:key})
+      }
+     });
       console.log(input);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const onChangeDropdown = (e) => {
@@ -194,7 +171,7 @@ export default function ScheduleTemplete({ data }) {
 
   const handleRoom = (e) => {
     const { value, name } = e.target;
-    setweekSchedule({...weekSchedule,[name]:{...weekSchedule[name],weekDay:value}})
+    setweekSchedule({...weekSchedule,[name]:{...weekSchedule[name],room_id:value}})
   };
 
   function handleShift() {
@@ -396,7 +373,7 @@ export default function ScheduleTemplete({ data }) {
                       <option selected disabled value=" Professor">
                         Professor
                       </option>
-                      {professor?.monday?.map((i) => (
+                      {professor[value]?.map((i) => (
                         <option value={i.professor_id}>
                           {i.first_name} {i.last_name}
                         </option>
@@ -450,13 +427,11 @@ export default function ScheduleTemplete({ data }) {
                     <option selected disabled value=" Input Approver">
                       Input Approver
                     </option>
-                    {allProfessor.map(
+                    {approverPreparer.map(
                       (i) =>
-                        i.degree === "PhD" && (
                           <option value={i.professor_id}>
                             {i.first_name} {i.last_name}
                           </option>
-                        )
                     )}
                   </select>
                 </div>
@@ -471,22 +446,17 @@ export default function ScheduleTemplete({ data }) {
                     <option selected disabled value=" Input Preparer">
                       Input Preparer
                     </option>
-                    {allProfessor.map(
+                    {approverPreparer.map(
                       (i) =>
-                        i.degree === "PhD" && (
                           <option value={i.professor_id}>
                             {i.first_name} {i.last_name}
                           </option>
-                        )
                     )}
                   </select>
                 </div>
               </div>
             </div>
-          </div>
-      </div>
-      {data != null ? (
-        <center>
+            <center>
           <button
             className=" btn px-6 btn-sm normal-case btn-primary"
             onClick={handleSave}
@@ -494,9 +464,9 @@ export default function ScheduleTemplete({ data }) {
             Save
           </button>
         </center>
-      ) : (
-        ""
-      )}
+          </div>
+      </div>
+     
     </div>
   );
 }
