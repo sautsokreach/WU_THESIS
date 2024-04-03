@@ -257,7 +257,9 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
               
               /* Footer */
               
-              .footer {
+              .footerSchedule {
+                
+                line-height: 0.5;
                 display: flex;
                 flex-direction: column;
               }
@@ -277,11 +279,14 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
               }
               .term > * {
                 margin-bottom: 0;
+                min-height: 20px;
+                margin-top: 10px;
               }
               
               .signatureButton > p:first-child {
-                padding-bottom: 10px;
-              }
+                padding-top: 20px;
+                padding-bottom: 70px;
+              } 
               
           `}{" "}
         </style>
@@ -397,7 +402,7 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
                 <td>{shift.shift2}</td>
               </tr>
             </table>
-            <div class="footer">
+            <div class="footerSchedule">
               <div class="scheduleTime">
                 <div class="term">
                   <p>Term starts on {(new Date(data.term_start).toLocaleDateString("en-US", {year: "numeric",month: "long", day: "numeric"}))}</p>

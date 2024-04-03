@@ -12,9 +12,10 @@ const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (input) => {
-    const res = await Axios.post(`${Base_URL}/api/login`, input);
-    //console.log(res.data);
-    setCurrentUser(res.data);
+     await  Axios.post(`${Base_URL}/api/login`, input).then((response) => {
+      setCurrentUser(response.data);
+     })
+     
   };
 
   const logout = async () => {

@@ -34,7 +34,7 @@ function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
     const id = randomId();
     const handleClick = () => {
-         setRows((oldRows) => [...oldRows, { id, subject_name: '', subject_code: ''}]);
+         setRows((oldRows) => [...oldRows,{ id, subject_name: '', subject_code: ''}]);
          setRowModesModel((oldModel) => ({
              ...oldModel,
              [id]: { mode: GridRowModes.Edit, fieldToFocus: 'subject_name' },
@@ -118,6 +118,7 @@ export default function Subject() {
         setRowModesModel(newRowModesModel);
     };
     const columns = [
+        //{ field: 'id', headerName: 'ID', width: 50},
         { field: 'subject_name', headerName: 'Subject Name', width: 180, editable: true },
         { field: 'subject_code', headerName: 'Code ', width: 180, editable: true },
         //{ field: 'department_name', headerName: 'Faculty', width: 180, editable: true },
@@ -183,6 +184,14 @@ export default function Subject() {
                 }}
             >
                 <DataGrid
+                    // initialState={{
+                    //     sorting: {
+                    //     sortModel: [{ field: 'id', sort: 'desc' }],
+                    //     },
+                    // }}
+                    // columnVisibilityModel={{
+                    //     id: false,
+                    //   }}
                     rows={rows}
                     columns={columns}
                     editMode="row"
