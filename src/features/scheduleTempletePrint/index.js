@@ -271,8 +271,7 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
                 justify-content: space-between;
               }
               
-              .term,
-              .dateTime {
+              .term {
                 max-width: 300px;
                 width: 100%;
                 font-size: 1rem;
@@ -409,7 +408,7 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
                   <p>Term ends on {(new Date(data.term_end).toLocaleDateString("en-US", {year: "numeric",month: "long", day: "numeric"}))}</p>
                 </div>
 
-                <div class="dateTime">
+                <div class="term">
                   <p>
                     This schedule is subject to change {data.startTermLabel}
                   </p>
