@@ -78,6 +78,21 @@ function GenerateSchedule() {
     // updateDashboardPeriod(newValue)
   };
 
+  const resetInput = () => {
+    // setInput({
+    //   year: "1",
+    //   year_label: "I",
+    //   semester: "1",
+    //   shift: "morning",
+    //   shift_label: "Morning",
+    //   startTerm: new Date(),
+    //   endTerm: new Date(),
+    //   startTermLabel: new Date().toLocaleDateString("en-US", {year: "numeric",month: "long",day: "numeric"}),
+    //   endTermLabel: new Date().toLocaleDateString("en-US", {year: "numeric",month: "long",day: "numeric"}),
+    // })
+    setData(null)
+  };
+
   useEffect(() => {
     getList(setDepartmentDegree, setDepartment, setUniversity);
   }, []);
@@ -285,7 +300,7 @@ function GenerateSchedule() {
       </TitleCard>
       <br></br>
       {data != null ?
-      <ScheduleTemplete data={data} setInput={setInput} />
+      <ScheduleTemplete data={data} resetInput={resetInput} />
       : (
         ""
       )}

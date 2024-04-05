@@ -17,7 +17,7 @@ function Login() {
 
   const { login } = useContext(AuthContext);
 
-  const submitForm = async (e) => {
+  const submitForm =(e) => {
     e.preventDefault();
     setErrorMessage("");
 
@@ -26,14 +26,11 @@ function Login() {
     if (loginObj.password.trim() === "")
       return setErrorMessage("Password is required!");
     else {
-      try {
-        await login(loginObj);
-        setLoading(true);
-        setLoading(false);
-        window.location.href = "/app/dashboard";
-      } catch (error) {
-        console.log(error);
-      }
+        login(loginObj).then((response) => {
+            window.location.href = "/app/dashboard";
+        }) .catch(error => {
+          return setErrorMessage("Password is do not match!");
+        });
     }
   };
 

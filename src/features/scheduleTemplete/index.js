@@ -24,6 +24,8 @@ import {
   randomArrayItem,
 } from "@mui/x-data-grid-generator";
 import { CommentsDisabledOutlined, CompareSharp } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { showNotification } from "../common/headerSlice";
 
 function getListUniversity(setRows) {
   axios.get(`${Base_URL}/api/universities`).then((res) => {
@@ -31,7 +33,8 @@ function getListUniversity(setRows) {
   });
 }
 
-export default function ScheduleTemplete({ data }) {
+export default function ScheduleTemplete({ data,resetInput }) {
+  const dispatch = useDispatch();
   const [professor, setProfessor] = useState({});
   const [approverPreparer, setApproverPreparer] = useState([]);
   const [room, setRoom] = useState([]);
@@ -99,10 +102,12 @@ export default function ScheduleTemplete({ data }) {
       for (let key in weekSchedule) {
         // Check if the property belongs to the object itself and not inherited
         const value = weekSchedule[key]
-          axios.post(`${Base_URL}/api/createScheduleDay`, {schedule_id:res.data.schedule_id,room_id:value.room_id,subject_id:value.subject_id,professor_id:value.professor_id,weekDay:key})
+          axios.post(`${Base_URL}/api/createScheduleDay`, {schedule_id:res.data.schedule_id,room_id:value.room_id,subject_id:value.subject_id,professor_id:value.professor_id,weekDay:key}).then((res) => {
+            dispatch(showNotification({ message: "Success", status: 1 }));
+            resetInput()
+          })
       }
      });
-      console.log(input);
   };
 
   const onChangeDropdown = (e) => {
