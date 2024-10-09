@@ -1,20 +1,14 @@
 import { themeChange } from "theme-change";
 import React, { useContext, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import BellIcon from "@heroicons/react/24/outline/BellIcon";
 import Bars3Icon from "@heroicons/react/24/outline/Bars3Icon";
 import MoonIcon from "@heroicons/react/24/outline/MoonIcon";
 import SunIcon from "@heroicons/react/24/outline/SunIcon";
-import { openRightDrawer } from "../features/common/rightDrawerSlice";
-import { RIGHT_DRAWER_TYPES } from "../utils/globalConstantUtil";
 import image from "../image/default_profile.png";
 
 import { NavLink, Routes, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../features/user/auth";
 
 function Header() {
-  const dispatch = useDispatch();
-  const { noOfNotifications, pageTitle } = useSelector((state) => state.header);
   const { currentUser } = useContext(AuthContext);
   const [currentTheme, setCurrentTheme] = useState(
     localStorage.getItem("theme")
@@ -33,18 +27,7 @@ function Header() {
         setCurrentTheme("light");
       }
     }
-    // 👆 false parameter is required for react project
   }, []);
-
-  // Opening right sidebar for notification
-  const openNotification = () => {
-    dispatch(
-      openRightDrawer({
-        header: "Notifications",
-        bodyType: RIGHT_DRAWER_TYPES.NOTIFICATION,
-      })
-    );
-  };
 
   function logoutUser() {
     logout();
@@ -67,22 +50,10 @@ function Header() {
           >
             <Bars3Icon className="h-5 inline-block w-5" />
           </label>
-          <h1 className="text-2xl font-semibold ml-2">{pageTitle}</h1>
+        
         </div>
 
         <div className="flex-none ">
-          {/* Multiple theme selection, uncomment this if you want to enable multiple themes selection, 
-                also includes corporate and retro themes in tailwind.config file */}
-
-          {/* <select className="select select-sm mr-4" data-choose-theme>
-                    <option disabled selected>Theme</option>
-                    <option value="light">Default</option>
-                    <option value="dark">Dark</option>
-                    <option value="corporate">Corporate</option>
-                    <option value="retro">Retro</option>
-                </select> */}
-
-          {/* Light and dark theme selection toogle **/}
           <label className="swap ">
             <input type="checkbox" />
             <SunIcon
@@ -102,16 +73,6 @@ function Header() {
               }
             />
           </label>
-
-          {/* Notification icon */}
-          {/* <button
-            className="btn btn-ghost ml-4  btn-circle"
-            onClick={() => openNotification()}
-          >
-            <div className="indicator">
-              <BellIcon className="h-6 w-6" />
-            </div>
-          </button> */}
 
           <div className="ml-4 mr-2">
             <h3>{currentUser?.username}</h3>
@@ -134,9 +95,6 @@ function Header() {
                   <span className="badge">New</span>
                 </Link>
               </li>
-              {/* <li className="">
-                <Link to={"/app/settings-billing"}>Login History</Link>
-              </li> */}
               <div className="divider mt-0 mb-0"></div>
               <li>
                 <a onClick={logoutUser}>Logout</a>

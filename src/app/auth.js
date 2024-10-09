@@ -1,8 +1,4 @@
 import axios from "axios";
-import { AuthContext } from "../features/user/auth";
-import { Token } from "@mui/icons-material";
-import { useContext } from "react";
-
 const CheckAuth = () => {
   /*  Getting token value stored in localstorage, if token is not present we will open login page 
     for all internal dashboard routes  */

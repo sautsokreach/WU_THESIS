@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import { themeChange } from "theme-change";
 import CheckAuth from "./app/auth";
-import initializeApp from "./app/init";
 import { AuthContext } from "./features/user/auth";
 
 // Importing pages
@@ -18,8 +17,6 @@ const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const Register = lazy(() => import("./pages/Register"));
 const Documentation = lazy(() => import("./pages/Documentation"));
 
-// Initializing different libraries
-initializeApp();
 const token = CheckAuth();
 
 // Check for login and initialize axios

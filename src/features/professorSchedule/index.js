@@ -1,19 +1,10 @@
 import * as React from 'react';
+import EditIcon from '@mui/icons-material/Edit';
 import { useEffect, useState } from "react";
-import moment from "moment";
-import { useDispatch } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
-import SelectBox from "../../components/Input/SelectBox";
-import { showNotification } from "../common/headerSlice";
-import { RECENT_TRANSACTIONS } from "../../utils/dummyData";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 import SearchBar from "../../components/Input/SearchBar";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
-import Box from "@mui/material/Box";
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import axios from "axios";
@@ -160,7 +151,6 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
 };
 
 function Professor_Schedule({schedule}) {
-  const [trans, setTrans] = React.useState(RECENT_TRANSACTIONS);
   const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
   useEffect(() => {
@@ -175,27 +165,7 @@ function Professor_Schedule({schedule}) {
       setRows(row)
     }
   }, [schedule]);
-  const removeFilter = () => {
-    setTrans(RECENT_TRANSACTIONS);
-  };
 
-  const applyFilter = (params) => {
-    let filteredTransactions = RECENT_TRANSACTIONS.filter((t) => {
-      return t.location == params;
-    });
-    setTrans(filteredTransactions);
-  };
-
-  // Search according to name
-  const applySearch = (value) => {
-    let filteredTransactions = RECENT_TRANSACTIONS.filter((t) => {
-      return (
-        t.email.toLowerCase().includes(value.toLowerCase()) ||
-        t.email.toLowerCase().includes(value.toLowerCase())
-      );
-    });
-    setTrans(filteredTransactions);
-  };
 
 
 
