@@ -17,5 +17,5 @@ module.exports = Object.freeze({
     },
    // Base_URL : "https://sautsokreach.xyz",
     //Base_URL : "http://localhost:8080",
-    Base_URL : "https://westernapi001-df6d24a5195d.herokuapp.com",
+    Base_URL : "https://apiwestern-2c81651a6087.herokuapp.com",
 });
