@@ -174,6 +174,13 @@ export default function ScheduleTempletePrint({ data ,isEdit}) {
       <div ref={elementToPrintRef}>
         <style>
           {`
+
+            @font-face {
+              font-family: 'KhmerOsMoulLight';
+              src: url('/KhmerOSMuolLightRegular.ttf') format('truetype');
+              font-weight: normal;
+              font-style: normal;
+            }
             .scheduleContainer {
                 display: flex;
                 flex-direction: column;
