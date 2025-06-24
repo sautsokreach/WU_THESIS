@@ -134,6 +134,7 @@ function ListProfessorSchedule({onClickSchedule}) {
   const [rowModesModel, setRowModesModel] = React.useState({});
   const [professor, setProfessor] = useState([]);
   const [subject, setSubject] = useState([]);
+  const [department, setDepartment] = useState([]);
   const currentYear = new Date().getFullYear();
   const years = Array.from(
     new Array(21),
@@ -146,6 +147,9 @@ function ListProfessorSchedule({onClickSchedule}) {
     });
     axios.get(`${Base_URL}/api/subjects`).then((res) => {
       setSubject(res.data);
+    });
+    axios.get(`${Base_URL}/api/departments`).then((res) => {
+      setDepartment(res.data);
     });
   }, []);
 
@@ -251,6 +255,16 @@ function ListProfessorSchedule({onClickSchedule}) {
       editable: true,
       type: "singleSelect",
       valueOptions: years,
+    },
+    {
+      field: "department_id",
+      headerName: "Department",
+      width: 300,
+      editable: true,
+      type: "singleSelect",
+      getOptionValue: (value) => value.department_id,
+      getOptionLabel: (value) => value.department_name,
+      valueOptions: department,
     },
     {
       field: "actions",
