@@ -89,14 +89,14 @@ function Login() {
                 Login
               </button>
 
-              <div className="text-center mt-4">
+              {/* <div className="text-center mt-4">
                 Don't have an account yet?
                 <Link to="/register">
                   <span className="inline-block hover:text-primary hover:underline hover:cursor-pointer transition duration-200 text-blue-500">
                     Register
                   </span>
                 </Link>
-              </div>
+              </div> */}
             </form>
           </div>
         </div>

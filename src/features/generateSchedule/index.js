@@ -229,6 +229,9 @@ function GenerateSchedule() {
               name="department"
               onChange={onChangeDropdownDataSet}
             >
+              <option selected disabled value="Please Select Major">
+                Please Select Faculty
+              </option>
               {department.map((i) => (
                 <option data-set={i.department_name} value={i.department_id}>
                   {i.department_name}  {i.degree}
